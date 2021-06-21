@@ -1,0 +1,3 @@
+Reset password link:
+{!! $url !!}
+
