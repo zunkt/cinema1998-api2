@@ -220,7 +220,7 @@ class AuthController extends Controller
             ];
             $sender = [
                 'address' => env('MAIL_FROM_ADDRESS', 'tiendang212@gmail.com'),
-                'name' => env('MAIL_FROM_NAME', 'Deal Cp')
+                'name' => env('MAIL_FROM_NAME', 'Couple Cinema 1998')
             ];
 
             Mail::send('email.user_created', $data, function($message) use ($user, $sender) {
