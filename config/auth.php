@@ -12,7 +12,6 @@ return [
     | as required, but they're a perfect start for most applications.
     |
     */
-// default là ADMIN, nên khi em call auth() thì nó hiểu là admin. muốn đổi guard thì phải truyền vào tham số  auth(??)
     'defaults' => [
         'guard' => 'admin',
         'passwords' => 'admins',

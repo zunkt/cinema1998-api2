@@ -16,13 +16,14 @@ class Controller extends BaseController
     /**
      * @return \Illuminate\Http\JsonResponse
      */
-    public function response($code = 200, $data = [], $message = '', $errors = [], $extendCode = null)
+    public function response($code = 200, $data = [], $message = '', $errors = [], $extendCode = null, $status = '')
     {
         return response()->json([
             'code' => $extendCode ? $extendCode : $code,
             'data' => (object)$data,
             'message' => $errors ? array_values($errors->toArray())[0][0] : $message,
-            'errors' => (object)$errors
+            'errors' => (object)$errors,
+            'status' => $status
         ], $code);
     }
 

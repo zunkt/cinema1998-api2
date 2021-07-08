@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class UserLoginHistoryCollection extends ResourceCollection
+class ScheduleCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -12,7 +12,7 @@ class UserLoginHistoryCollection extends ResourceCollection
      * @param  \Illuminate\Http\Request  $request
      * @return array
      */
-    public function toArray($resource)
+    public function toArray($request)
     {
         return [
             'data' => $this->collection,

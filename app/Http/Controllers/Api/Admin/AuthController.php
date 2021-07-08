@@ -62,38 +62,25 @@ class AuthController extends Controller
 
         $credentials = request(['email', 'password']);
 
-//        dd(!$token = auth()->attempt($credentials));
-        if (!$token = auth()->attempt($credentials)) {
-            // Validate rule: Incorrect Password type cap :
-            // 5 times > cannot use the previous password and password reset email is auto sent.
+        if (!$token = auth('admin')->attempt($credentials)) {
             $email = trim(request()->email);
             $adminFailed = Admin::where('email', $email)->first();
 
             if(isset($adminFailed)){
                 $adminFailed->increment('failed_login_attempts');
-
-                if($adminFailed->failed_login_attempts > 4){
-                    $adminFailed->update(['password' => Hash::make(uniqid())]);
-
-                    $status = Password::sendResetLink(request()->only('email'));
-                    $code = $status === Password::RESET_LINK_SENT ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST;
-
-                    return $this->response(422, [], __('text.check_email_reset_pass'));
-                }
                 return $this->response(422, [], __('auth.password'));
             }
             return $this->response(401, [], __('auth.failed'));
         }
 
-        $admin = Admin::find(auth()->id());
-
+        $admin = Admin::find(auth('admin')->id());
         // Reset failed_login_attempts
         $admin->update(['failed_login_attempts' => 0]);
 
         return $this->response(200, [
             'token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60
+            'expires_in' => auth('admin')->factory()->getTTL() * 60
         ]);
     }
 
@@ -104,13 +91,13 @@ class AuthController extends Controller
      */
     public function me()
     {
-        $user = auth()->user();
+        $admin = auth('admin')->user();
 
-        if (!$user) {
+        if (!$admin) {
             return $this->response(401, [], __('auth.not_authenticated'));
         }
 
-        return $this->response(200, ['user' => $user]);
+        return $this->response(200, ['admin' => $admin]);
     }
 
     /**
@@ -193,16 +180,16 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email:rfc,dns',
-            'name' => 'required|string|max:255',
             'full_name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
+            'address' => 'nullable|string|max:255',
+            'identityNumber' => 'nullable|string|max:255',
         ]);
 
         if ($validator->fails()) {
             return $this->response(422, [], '', $validator->errors());
         }
 
-        $input = $request->only(['email', 'name', 'phone', 'full_name']);
+        $input = $request->only(['email', 'full_name', 'address', 'identityNumber']);
 
         $isRegistered = $this->adminRepo->all(['email' => $input['email']]);
 
@@ -222,8 +209,8 @@ class AuthController extends Controller
                 'password' => $password
             ];
             $sender = [
-                'address' => env('MAIL_FROM_ADDRESS', 'lexus@gmail.com'),
-                'name' => env('MAIL_FROM_NAME', 'Lexus CP')
+                'address' => env('MAIL_FROM_ADDRESS', 'tiendang212@gmail.com'),
+                'name' => env('MAIL_FROM_NAME', 'Cinema 1998')
             ];
 
             Mail::send('email.admin_created', $data, function($message) use ($admin, $sender) {
