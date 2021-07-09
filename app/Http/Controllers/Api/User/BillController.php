@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\BillCollection;
+use App\Http\Resources\BillResource;
 use App\Repositories\BillRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class BillController extends Controller
 {
@@ -22,21 +25,14 @@ class BillController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $pages = intval($request->size);
+        $bill = $this->billRepo->billSearch($request)->paginate($pages);
+        return $this->response(200, ['bill' => new BillCollection($bill)], __('text.retrieved_successfully'), [], null, true);
     }
 
     /**
@@ -47,7 +43,18 @@ class BillController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'price' => 'required|int',
+            'status' => 'required|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->response(422, [], '', $validator->errors(), [], false);
+        }
+        $input = $request->only(['price', 'status']);
+
+        $bill = $this->billRepo->create($input);
+        return $this->response(200, ['bill' => new BillResource($bill)], __('text.register_successfully'), [], true, false);
     }
 
     /**
@@ -58,18 +65,13 @@ class BillController extends Controller
      */
     public function show($id)
     {
-        //
-    }
+        $bill = $this->billRepo->find($id);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        if (empty($bill)) {
+            return $this->response(200, [], __('text.is_invalid'), [], null, false);
+        }
+
+        return $this->response(200, ['bill' => new BillResource($bill)], __('text.retrieved_successfully'));
     }
 
     /**
@@ -81,7 +83,24 @@ class BillController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'price' => 'required|int',
+            'status' => 'required|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->response(422, [], '', $validator->errors(), [], false);
+        }
+        $input = $request->only(['price', 'status']);
+
+        $bill = $this->billRepo->find($id);
+
+        if (empty($bill)) {
+            return $this->response(422, [], __('text.not_found', ['model' => 'Bill']), [], false);
+        }
+
+        $bill = $this->billRepo->update($input, $id);
+        return $this->response(200, ['bill' => new BillResource($bill)], __('text.register_successfully'), [], true, false);
     }
 
     /**
@@ -92,6 +111,14 @@ class BillController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $bill = $this->billRepo->find($id);
+
+        if (empty($bill)) {
+            return $this->response(200, [], __('text.delete_not_found'), [], false);
+        }
+
+        $this->billRepo->delete($id);
+
+        return $this->response(200, null,  __('text.delete_successfully'));
     }
 }

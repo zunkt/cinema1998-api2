@@ -41,6 +41,7 @@ class Movie extends Model
         'year' => 'integer',
         'long_time' => 'double',
         'rating' => 'double',
+        'schedule_id' => 'integer',
     ];
 
     /**
@@ -56,8 +57,8 @@ class Movie extends Model
         'language' => 'nullable|string|max:100',
         'actor' => 'nullable|string|max:100',
         'year' => 'nullable|integer|max:100',
-        'long_time' => 'nullable|double|max:100',
-        'rating' => 'nullable|double|max:100',
-        'created_at' => 'required',
+        'long_time' => 'nullable|integer|max:100',
+        'rating' => 'nullable|integer|max:100',
+        'schedule_id' => 'required|integer',
     ];
 }

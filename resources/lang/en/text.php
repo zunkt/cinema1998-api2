@@ -17,6 +17,8 @@ return [
     'withdrawal_successfully' => 'Withdrawal successfully',
     'please_confirm_the_new_password_in_the_email' => 'Please confirm the new password in the email.',
     'not_found' => ':model not found.',
+    'has_been_registered' => ':model has been registered.',
+    'text_not_found' => 'Not Found.',
     'import_successfully' => 'Import successfully',
     'import_failure' => 'Import failure',
     'verify_failure' => 'Verify failure',

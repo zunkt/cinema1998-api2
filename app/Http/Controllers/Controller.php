@@ -23,7 +23,7 @@ class Controller extends BaseController
             'data' => (object)$data,
             'message' => $errors ? array_values($errors->toArray())[0][0] : $message,
             'errors' => (object)$errors,
-            'status' => $status
+            'status' => ($status == false) ? false : true
         ], $code);
     }
 

@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ScheduleCollection;
+use App\Http\Resources\ScheduleResource;
 use App\Repositories\ScheduleRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ScheduleController extends Controller
 {
@@ -22,21 +25,14 @@ class ScheduleController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resouMovieRepository.phprce.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $pages = intval($request->size);
+        $schedule = $this->scheRepo->scheduleSearch($request)->paginate($pages);
+        return $this->response(200, ['schedule' => new ScheduleCollection($schedule)], __('text.retrieved_successfully'));
     }
 
     /**
@@ -47,7 +43,24 @@ class ScheduleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:100',
+            'time_start' => 'nullable',
+            'time_end' => 'nullable',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->response(422, [], '', $validator->errors());
+        }
+        $input = $request->only(['name', 'time_start', 'time_end']);
+
+        $checkName = $this->scheRepo->all(['name' => $input['name']]);
+
+        if (count($checkName)) {
+            return $this->response(422, [], __('text.has_been_registered', ['model' => 'Name']));
+        }
+        $schedule = $this->scheRepo->create($input);
+        return $this->response(200, ['schedule' => new ScheduleResource($schedule)], __('text.register_successfully'));
     }
 
     /**
@@ -58,18 +71,13 @@ class ScheduleController extends Controller
      */
     public function show($id)
     {
-        //
-    }
+        $schedule = $this->scheRepo->find($id);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        if (empty($schedule)) {
+            return $this->response(200, [], __('text.is_invalid'), [], null, false);
+        }
+
+        return $this->response(200, ['schedule' => new ScheduleResource($schedule)], __('text.retrieved_successfully'));
     }
 
     /**
@@ -81,7 +89,27 @@ class ScheduleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:100',
+            'time_start' => 'nullable',
+            'time_end' => 'nullable',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->response(422, [], '', $validator->errors());
+        }
+
+        $input = $request->only(['name', 'time_start', 'time_end']);
+
+        $schedule = $this->scheRepo->find($id);
+
+        if (empty($schedule)) {
+            return $this->response(422, [], __('text.not_found', ['model' => 'Schedule']));
+        }
+
+        $schedule = $this->scheRepo->update($input, $id);
+
+        return $this->response(200, ['schedule' => new ScheduleResource($schedule)], __('text.update_successfully'));
     }
 
     /**
@@ -92,6 +120,14 @@ class ScheduleController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $schedule = $this->scheRepo->find($id);
+
+        if (empty($schedule)) {
+            return $this->response(422, [], __('text.delete_not_found'));
+        }
+
+        $this->scheRepo->delete($id);
+
+        return $this->response(200, null,  __('text.delete_successfully'));
     }
 }

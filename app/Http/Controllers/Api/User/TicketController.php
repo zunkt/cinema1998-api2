@@ -3,20 +3,35 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\TicketCollection;
+use App\Http\Resources\TicketResource;
+use App\Repositories\BillRepository;
+use App\Repositories\ScheduleRepository;
 use App\Repositories\TicketRepository;
+use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class TicketController extends Controller
 {
     private $ticRepo;
+    private $scheRepo;
+    private $userRepo;
+    private $billRepo;
 
     /**
      * MediaController constructor.
      * @param TicketRepository $ticRepo
+     * @param ScheduleRepository $scheRepo
+     * @param UserRepository $userRepo
+     * @param BillRepository $billRepo
      */
-    public function __construct(TicketRepository $ticRepo)
+    public function __construct(TicketRepository $ticRepo, ScheduleRepository $scheRepo, UserRepository $userRepo, BillRepository $billRepo)
     {
         $this->ticRepo = $ticRepo;
+        $this->scheRepo = $scheRepo;
+        $this->userRepo = $userRepo;
+        $this->billRepo = $billRepo;
     }
 
     /**
@@ -24,19 +39,11 @@ class TicketController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $pages = intval($request->size);
+        $ticket = $this->ticRepo->ticketSearch($request)->paginate($pages);
+        return $this->response(200, ['ticket' => new TicketCollection($ticket)], __('text.retrieved_successfully'), [], null, true);
     }
 
     /**
@@ -47,7 +54,41 @@ class TicketController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:100',
+            'schedule_id' => 'required|int',
+            'user_id' => 'required|int',
+            'bill_id' => 'required|int',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->response(200, [], '', $validator->errors(), [], false);
+        }
+        $input = $request->only(['name', 'schedule_id', 'user_id', 'bill_id']);
+        $isExitSche = $this->scheRepo->find($request->schedule_id);
+        $isExitUser = $this->userRepo->find($request->user_id);
+        $isExitBill = $this->billRepo->find($request->bill_id);
+
+        if (!$isExitUser) {
+            return $this->response(200, [], __('text.not_found', ['model' => 'User Id']), [], null, false);
+        }
+
+        if (!$isExitSche) {
+            return $this->response(200, [], __('text.not_found', ['model' => 'Sche Id']), [], null, false);
+        }
+
+        if (!$isExitBill) {
+            return $this->response(200, [], __('text.not_found', ['model' => 'Bill Id']), [], null, false);
+        }
+
+        $checkName = $this->ticRepo->all(['name' => $input['name']]);
+
+        if (count($checkName)) {
+            return $this->response(200, [], __('text.has_been_registered', ['model' => 'Name']), [], null, false);
+        }
+
+        $ticket = $this->ticRepo->create($input);
+        return $this->response(200, ['ticket' => new TicketResource($ticket)], __('text.register_successfully'), [], true, false);
     }
 
     /**
@@ -58,18 +99,13 @@ class TicketController extends Controller
      */
     public function show($id)
     {
-        //
-    }
+        $ticket = $this->ticRepo->find($id);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        if (empty($ticket)) {
+            return $this->response(200, [], __('text.is_invalid'), [], null, false);
+        }
+
+        return $this->response(200, ['ticket' => new TicketResource($ticket)], __('text.retrieved_successfully'), [], null, true);
     }
 
     /**
@@ -81,7 +117,28 @@ class TicketController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:100',
+            'schedule_id' => 'required|int',
+            'user_id' => 'required|int',
+            'bill_id' => 'required|int',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->response(200, [], '', $validator->errors(), [], false);
+        }
+
+        $input = $request->only(['name', 'schedule_id', 'user_id', 'bill_id']);
+
+        $ticket = $this->ticRepo->find($id);
+
+        if (empty($ticket)) {
+            return $this->response(200, [], __('text.not_found', ['model' => 'Ticket']), [], false);
+        }
+
+        $ticket = $this->ticRepo->update($input, $id);
+
+        return $this->response(200, ['ticket' => new TicketResource($ticket)], __('text.update_successfully'));
     }
 
     /**
@@ -92,6 +149,14 @@ class TicketController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $ticket = $this->ticRepo->find($id);
+
+        if (empty($ticket)) {
+            return $this->response(200, [], __('text.delete_not_found'), [], false);
+        }
+
+        $this->ticRepo->delete($id);
+
+        return $this->response(200, null,  __('text.delete_successfully'));
     }
 }

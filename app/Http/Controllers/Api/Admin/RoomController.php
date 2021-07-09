@@ -3,40 +3,40 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\RoomCollection;
+use App\Http\Resources\RoomResource;
 use App\Repositories\RoomRepository;
+use App\Repositories\TheaterRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class RoomController extends Controller
 {
     private $roomRepo;
+    private $theaRepo;
 
     /**
      * MediaController constructor.
      * @param RoomRepository $roomRepo
+     * @param TheaterRepository $theaRepo
      */
-    public function __construct(RoomRepository $roomRepo)
+    public function __construct(RoomRepository $roomRepo, TheaterRepository $theaRepo)
     {
         $this->roomRepo = $roomRepo;
+        $this->theaRepo = $theaRepo;
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $pages = intval($request->size);
+        $room = $this->roomRepo->roomSearch($request)->paginate($pages);
+        return $this->response(200, ['room' => new RoomCollection($room)], __('text.retrieved_successfully'), [], null, true);
     }
 
     /**
@@ -47,7 +47,31 @@ class RoomController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:100',
+            'chair_number' => 'required|integer|max:100',
+            'theater_id' => 'required|integer'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->response(422, [], '', $validator->errors());
+        }
+        $input = $request->only(['name', 'chair_number', 'theater_id']);
+
+        $checkName = $this->roomRepo->all(['name' => $input['name']]);
+
+        if (count($checkName)) {
+            return $this->response(422, [], __('text.has_been_registered', ['model' => 'Name']));
+        }
+
+        $isExitTheater = $this->theaRepo->find($request->theater_id);
+
+        if (!$isExitTheater) {
+            return $this->response(200, [], __('text.not_found', ['model' => 'Theater Id']), [], null, false);
+        }
+
+        $room = $this->roomRepo->create($input);
+        return $this->response(200, ['room' => new RoomResource($room)], __('text.register_successfully'));
     }
 
     /**
@@ -58,18 +82,13 @@ class RoomController extends Controller
      */
     public function show($id)
     {
-        //
-    }
+        $room = $this->roomRepo->find($id);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        if (empty($room)) {
+            return $this->response(200, [], __('text.not_found', ['model' => 'Room']), [], null, false);
+        }
+
+        return $this->response(200, ['room' => new RoomResource($room)], __('text.retrieved_successfully'), [], null, true);
     }
 
     /**
@@ -81,7 +100,25 @@ class RoomController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:100',
+            'chair_number' => 'required|integer|max:100',
+            'theater_id' => 'required|integer'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->response(422, [], '', $validator->errors());
+        }
+
+        $input = $request->only(['name', 'chair_number', 'theater_id']);
+
+        if (empty($this->roomRepo->find($id))) {
+            return $this->response(422, [], __('text.not_found', ['model' => 'Room']));
+        }
+
+        $room = $this->roomRepo->update($input, $id);
+
+        return $this->response(200, ['schedule' => new RoomResource($room)], __('text.update_successfully'));
     }
 
     /**
@@ -92,6 +129,14 @@ class RoomController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $room = $this->roomRepo->find($id);
+
+        if (empty($room)) {
+            return $this->response(200, [], __('text.delete_not_found'), [], false);
+        }
+
+        $this->roomRepo->delete($id);
+
+        return $this->response(200, null, __('text.delete_successfully'));
     }
 }
