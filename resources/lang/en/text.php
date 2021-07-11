@@ -24,5 +24,6 @@ return [
     'verify_failure' => 'Verify failure',
     'verify_successfully' => 'Verify successfully',
     'restored' => 'This :model has restored',
-    'deleted' => 'This :model has deleted'
+    'deleted' => 'This :model has deleted',
+    'delete_successfully' => ':model has deleted successfully'
 ];

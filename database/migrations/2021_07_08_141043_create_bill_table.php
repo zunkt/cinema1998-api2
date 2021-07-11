@@ -17,6 +17,7 @@ class CreateBillTable extends Migration
             $table->integer('id', true);
             $table->double('price');
             $table->string('status');
+            $table->integer('ticket_id');
             $table->dateTime('created_at');
             $table->dateTime('updated_at');
         });

@@ -18,6 +18,7 @@ class CreateScheduleTable extends Migration
             $table->string('name');
             $table->dateTime('time_start');
             $table->dateTime('time_end');
+            $table->integer('movie_id');
             $table->dateTime('created_at');
             $table->dateTime('updated_at');
         });

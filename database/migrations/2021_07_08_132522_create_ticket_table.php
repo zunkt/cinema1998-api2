@@ -17,7 +17,6 @@ class CreateTicketTable extends Migration
             $table->integer('id', true);
             $table->string('name');
             $table->integer('schedule_id')->default(null);
-            $table->integer('bill_id')->default(null);
             $table->integer('user_id')->default(null);
             $table->dateTime('created_at');
             $table->dateTime('updated_at');

@@ -57,14 +57,13 @@ class MovieController extends Controller
             'year' => 'nullable|integer',
             'long_time' => 'nullable|integer|max:100',
             'rating' => 'nullable|integer|max:100',
-            'schedule_id' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
             return $this->response(200, [], '', $validator->errors(), [], null, false);
         }
         $input = $request->only(['name', 'image', 'trailer_url', 'director',
-            'language', 'actor', 'year', 'long_time', 'rating', 'schedule_id']);
+            'language', 'actor', 'year', 'long_time', 'rating']);
 
         $isExitSche = $this->scheRepo->find($request->schedule_id);
 
@@ -141,14 +140,13 @@ class MovieController extends Controller
             'year' => 'nullable|integer',
             'long_time' => 'nullable|integer|max:100',
             'rating' => 'nullable|integer|max:100',
-            'schedule_id' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
             return $this->response(200, [], '', $validator->errors(), [], null, false);
         }
         $input = $request->only(['name', 'image', 'trailer_url', 'director',
-            'language', 'actor', 'year', 'long_time', 'rating', 'schedule_id']);
+            'language', 'actor', 'year', 'long_time', 'rating']);
 
         $isExitSche = $this->scheRepo->find($request->schedule_id);
 

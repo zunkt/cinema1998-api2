@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddForeignKeysToTheaterTable extends Migration
+class AddForeignKeysToBillTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class AddForeignKeysToTheaterTable extends Migration
      */
     public function up()
     {
-        Schema::table('theater', function (Blueprint $table) {
-            $table->foreign('movie_id', 'theater_movie_idfk_1')
+        Schema::table('bill', function (Blueprint $table) {
+            $table->foreign('ticket_id', 'bill_ticket_idfk_1')
                 ->references('id')
-                ->on('movie')
+                ->on('bill')
                 ->onUpdate('RESTRICT')
                 ->onDelete('RESTRICT');
         });
@@ -29,8 +29,8 @@ class AddForeignKeysToTheaterTable extends Migration
      */
     public function down()
     {
-        Schema::table('theater', function (Blueprint $table) {
-            $table->dropForeign('theater_movie_idfk_1');
+        Schema::table('bill', function (Blueprint $table) {
+            //
         });
     }
 }

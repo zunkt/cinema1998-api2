@@ -47,12 +47,13 @@ class ScheduleController extends Controller
             'name' => 'required|string|max:100',
             'time_start' => 'nullable',
             'time_end' => 'nullable',
+            'movie_id' => 'required|integer|max:100',
         ]);
 
         if ($validator->fails()) {
             return $this->response(422, [], '', $validator->errors());
         }
-        $input = $request->only(['name', 'time_start', 'time_end']);
+        $input = $request->only(['name', 'time_start', 'time_end', 'movie_id']);
 
         $checkName = $this->scheRepo->all(['name' => $input['name']]);
 
@@ -74,7 +75,7 @@ class ScheduleController extends Controller
         $schedule = $this->scheRepo->find($id);
 
         if (empty($schedule)) {
-            return $this->response(200, [], __('text.is_invalid'), [], null, false);
+            return $this->response(200, [], __('text.not_found', ['model' => 'Schedule']), [], false);
         }
 
         return $this->response(200, ['schedule' => new ScheduleResource($schedule)], __('text.retrieved_successfully'));
@@ -93,13 +94,14 @@ class ScheduleController extends Controller
             'name' => 'required|string|max:100',
             'time_start' => 'nullable',
             'time_end' => 'nullable',
+            'movie_id' => 'required|integer|max:100',
         ]);
 
         if ($validator->fails()) {
             return $this->response(422, [], '', $validator->errors());
         }
 
-        $input = $request->only(['name', 'time_start', 'time_end']);
+        $input = $request->only(['name', 'time_start', 'time_end', 'movie_id']);
 
         $schedule = $this->scheRepo->find($id);
 

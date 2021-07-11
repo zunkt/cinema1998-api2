@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddForeignKeysToRoomTable extends Migration
+class AddForeignKeysToSeatTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,15 @@ class AddForeignKeysToRoomTable extends Migration
      */
     public function up()
     {
-        Schema::table('room', function (Blueprint $table) {
-            $table->foreign('theater_id', 'room_theater_idfk_1')
+        Schema::table('seat', function (Blueprint $table) {
+            $table->foreign('ticket_id', 'seat_ticket_idfk_1')
                 ->references('id')
-                ->on('theater')
+                ->on('ticket')
                 ->onUpdate('RESTRICT')
                 ->onDelete('RESTRICT');
-            $table->foreign('schedule_id', 'room_schedule_idfk_1')
+            $table->foreign('room_id', 'seat_room_idfk_1')
                 ->references('id')
-                ->on('schedule')
+                ->on('ticket')
                 ->onUpdate('RESTRICT')
                 ->onDelete('RESTRICT');
         });
@@ -34,9 +34,9 @@ class AddForeignKeysToRoomTable extends Migration
      */
     public function down()
     {
-        Schema::table('room', function (Blueprint $table) {
-            $table->dropForeign('room_theater_idfk_1');
-            $table->dropForeign('room_schedule_idfk_1');
+        Schema::table('seat', function (Blueprint $table) {
+            $table->dropForeign('seat_ticket_idfk_1');
+            $table->dropForeign('seat_room_idfk_1');
         });
     }
 }

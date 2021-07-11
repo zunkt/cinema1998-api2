@@ -24,7 +24,6 @@ class CreateMovieTable extends Migration
             $table->integer('year');
             $table->double('long_time');
             $table->double('rating');
-            $table->integer('schedule_id')->default(null);
             $table->dateTime('created_at');
             $table->dateTime('updated_at');
         });

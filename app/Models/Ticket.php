@@ -16,7 +16,6 @@ class Ticket extends Model
         'name',
         'user_id',
         'schedule_id',
-        'bill_id',
     ];
 
     /**
@@ -29,7 +28,6 @@ class Ticket extends Model
         'name' => 'string',
         'user_id' => 'integer',
         'schedule_id' => 'integer',
-        'bill_id' => 'integer',
     ];
 
     /**

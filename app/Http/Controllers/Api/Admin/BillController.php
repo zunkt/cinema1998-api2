@@ -46,12 +46,13 @@ class BillController extends Controller
         $validator = Validator::make($request->all(), [
             'price' => 'required|int',
             'status' => 'required|string|max:255',
+            'ticket_id' => 'required|integer|max:100',
         ]);
 
         if ($validator->fails()) {
             return $this->response(422, [], '', $validator->errors(), [], false);
         }
-        $input = $request->only(['price', 'status']);
+        $input = $request->only(['price', 'status', 'ticket_id']);
 
         $bill = $this->billRepo->create($input);
         return $this->response(200, ['bill' => new BillResource($bill)], __('text.register_successfully'), [], true, false);
@@ -68,7 +69,7 @@ class BillController extends Controller
         $bill = $this->billRepo->find($id);
 
         if (empty($bill)) {
-            return $this->response(200, [], __('text.is_invalid'), [], null, false);
+            return $this->response(200, [], __('text.not_found', ['model' => 'Bill']), [], false);
         }
 
         return $this->response(200, ['bill' => new BillResource($bill)], __('text.retrieved_successfully'));
@@ -86,12 +87,13 @@ class BillController extends Controller
         $validator = Validator::make($request->all(), [
             'price' => 'required|int',
             'status' => 'required|string|max:255',
+            'ticket_id' => 'required|integer|max:100',
         ]);
 
         if ($validator->fails()) {
             return $this->response(422, [], '', $validator->errors(), [], false);
         }
-        $input = $request->only(['price', 'status']);
+        $input = $request->only(['price', 'status', 'ticket_id']);
 
         $bill = $this->billRepo->find($id);
 

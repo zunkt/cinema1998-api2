@@ -24,11 +24,6 @@ class AddForeignKeysToTicketTable extends Migration
                 ->on('user')
                 ->onUpdate('RESTRICT')
                 ->onDelete('RESTRICT');
-            $table->foreign('bill_id', 'ticket_bill_idfk_1')
-                ->references('id')
-                ->on('bill')
-                ->onUpdate('RESTRICT')
-                ->onDelete('RESTRICT');
         });
     }
 
@@ -42,7 +37,6 @@ class AddForeignKeysToTicketTable extends Migration
         Schema::table('ticket', function (Blueprint $table) {
             $table->dropForeign('ticket_schedule_idfk_1');
             $table->dropForeign('ticket_user_idfk_1');
-            $table->dropForeign('ticket_bill_idfk_1');
         });
     }
 }

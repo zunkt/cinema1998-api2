@@ -39,9 +39,7 @@ Route::group(['middleware' => 'auth:admin'], function () {
         Route::get('show/{id}', [UserController::class, 'show']);
         Route::post('update/{id}', [UserController::class, 'update']);
         Route::post('search', [UserController::class, 'searchByName']);
-
-        Route::put('switch-ban-at', 'UserController@switchBanAt');
-        Route::put('switch-delete-at', 'UserController@switchDeleteAt');
+        Route::post('delete/{id}', [UserController::class, 'destroy']);
     });
 
     // Resource Ticket

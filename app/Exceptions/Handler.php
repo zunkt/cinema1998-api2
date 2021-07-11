@@ -55,16 +55,9 @@ class Handler extends ExceptionHandler
             return response()->json([
                 'code' => 401,
                 'data' => (object)[],
-                'message' => '이 작업을 수행하려면 로그인하십시오.',//Please login to perform this action
+                'message' => 'Please log in to do this',//Please login to perform this action
                 'errors' => ''
             ], 401);
-        }else if($classExp == 'Twilio\Exceptions\RestException'){
-            return response()->json([
-                'code' => 422,
-                'data' => (object)[],
-                'message' => '전화 번호가 유효하지 않습니다',//Your phone number is not valid
-                'errors' => ''
-            ], 422);
         }
 
         return parent::render($request, $exception);

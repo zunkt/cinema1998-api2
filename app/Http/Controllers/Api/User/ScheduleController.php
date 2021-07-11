@@ -47,12 +47,13 @@ class ScheduleController extends Controller
             'name' => 'required|string|max:100',
             'time_start' => 'nullable',
             'time_end' => 'nullable',
+            'schedule_id' => 'required|integer|max:100',
         ]);
 
         if ($validator->fails()) {
             return $this->response(200, [], '', $validator->errors(), [], false);
         }
-        $input = $request->only(['name', 'time_start', 'time_end']);
+        $input = $request->only(['name', 'time_start', 'time_end', 'schedule_id']);
 
         $checkName = $this->scheRepo->all(['name' => $input['name']]);
 
@@ -93,13 +94,14 @@ class ScheduleController extends Controller
             'name' => 'required|string|max:100',
             'time_start' => 'nullable',
             'time_end' => 'nullable',
+            'schedule_id' => 'required|integer|max:100',
         ]);
 
         if ($validator->fails()) {
             return $this->response(200, [], '', $validator->errors(), [], false);
         }
 
-        $input = $request->only(['name', 'time_start', 'time_end']);
+        $input = $request->only(['name', 'time_start', 'time_end', 'schedule_id']);
 
         $schedule = $this->scheRepo->find($id);
 

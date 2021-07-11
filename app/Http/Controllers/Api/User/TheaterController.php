@@ -51,13 +51,12 @@ class TheaterController extends Controller
             'name' => 'required|string|max:100',
             'address' => 'nullable|string|max:100',
             'phone' => 'nullable|string|max:100',
-            'movie_id' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
             return $this->response(200, [], '', $validator->errors(), [], false);
         }
-        $input = $request->only(['name', 'address', 'phone', 'movie_id']);
+        $input = $request->only(['name', 'address', 'phone']);
 
         $checkName = $this->theaRepo->all(['name' => $input['name']]);
         $isExitMovie = $this->movieRepo->find($request->movie_id);
@@ -104,14 +103,13 @@ class TheaterController extends Controller
             'name' => 'required|string|max:100',
             'address' => 'nullable|string|max:100',
             'phone' => 'nullable|string|max:100',
-            'movie_id' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
             return $this->response(200, [], '', $validator->errors(), [], false);
         }
 
-        $input = $request->only(['name', 'schedule_id', 'user_id', 'bill_id']);
+        $input = $request->only(['name', 'schedule_id', 'user_id']);
 
         if (empty($this->theaRepo->find($id))) {
             return $this->response(200, [], __('text.not_found', ['model' => 'Theater']), [], false);

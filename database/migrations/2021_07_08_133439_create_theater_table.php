@@ -18,7 +18,6 @@ class CreateTheaterTable extends Migration
             $table->string('name');
             $table->string('address');
             $table->string('phone', 20);
-            $table->integer('movie_id')->default(null);
             $table->dateTime('created_at');
             $table->dateTime('updated_at');
         });

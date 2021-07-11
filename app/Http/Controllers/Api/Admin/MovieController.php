@@ -57,20 +57,13 @@ class MovieController extends Controller
             'year' => 'nullable|integer',
             'long_time' => 'nullable|integer|max:100',
             'rating' => 'nullable|integer|max:100',
-            'schedule_id' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
             return $this->response(422, [], '', $validator->errors());
         }
         $input = $request->only(['name', 'image', 'trailer_url', 'director',
-            'language', 'actor', 'year', 'long_time', 'rating', 'schedule_id']);
-
-        $isExitSche = $this->scheRepo->find($request->schedule_id);
-
-        if (!$isExitSche) {
-            return $this->response(200, [], __('text.not_found', ['model' => 'Sche Id']), [], null, false);
-        }
+            'language', 'actor', 'year', 'long_time', 'rating']);
 
         $movie = $this->movieRepo->create($input);
 
@@ -116,7 +109,7 @@ class MovieController extends Controller
         $movie = $this->movieRepo->find($id);
 
         if (empty($movie)) {
-            return $this->response(200, [], __('text.is_invalid'), [], null, false);
+            return $this->response(200, [], __('text.not_found', ['model' => 'Movie']), [], null, false);
         }
 
         return $this->response(200, ['movie' => new MovieResource($movie)], __('text.retrieved_successfully'), [], null, true);
@@ -141,20 +134,13 @@ class MovieController extends Controller
             'year' => 'nullable|integer',
             'long_time' => 'nullable|integer|max:100',
             'rating' => 'nullable|integer|max:100',
-            'schedule_id' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
             return $this->response(422, [], '', $validator->errors());
         }
         $input = $request->only(['name', 'image', 'trailer_url', 'director',
-            'language', 'actor', 'year', 'long_time', 'rating', 'schedule_id']);
-
-        $isExitSche = $this->scheRepo->find($request->schedule_id);
-
-        if (!$isExitSche) {
-            return $this->response(200, [], __('text.not_found', ['model' => 'Sche Id']), [], null, false);
-        }
+            'language', 'actor', 'year', 'long_time', 'rating']);
 
         $movie = $this->movieRepo->find($id);
 
@@ -208,6 +194,6 @@ class MovieController extends Controller
 
         $this->movieRepo->delete($id);
 
-        return $this->response(200, null, __('text.delete_successfully'));
+        return $this->response(200, null, __('text.delete_successfully', ['model' => 'Movie']));
     }
 }

@@ -13,7 +13,6 @@ class Theater extends Model
         'name',
         'address',
         'phone',
-        'movie_id',
     ];
 
     /**
@@ -26,7 +25,6 @@ class Theater extends Model
         'name' => 'string',
         'address' => 'string',
         'phone' => 'string',
-        'movie_id' => 'integer',
     ];
 
     /**
@@ -38,7 +36,6 @@ class Theater extends Model
         'name' => 'required|string|max:100',
         'address' => 'nullable|string|max:100',
         'phone' => 'nullable|string|max:100',
-        'movie_id' => 'required|integer',
         'created_at' => 'required',
     ];
 }

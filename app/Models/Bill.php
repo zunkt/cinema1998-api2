@@ -14,7 +14,8 @@ class Bill extends Model
 
     public $fillable = [
         'price',
-        'status'
+        'status',
+        'ticket_id'
     ];
 
     /**
@@ -25,7 +26,8 @@ class Bill extends Model
     protected $casts = [
         'id' => 'integer',
         'price' => 'integer',
-        'status' => 'string'
+        'status' => 'string',
+        'ticket_id' => 'integer',
     ];
 
     /**
@@ -36,6 +38,7 @@ class Bill extends Model
     public static $rules = [
         'price' => 'required|integer|max:100',
         'status' => 'required|string|max:100',
+        'ticket_id' => 'required|integer|max:100',
         'created_at' => 'required',
     ];
 }

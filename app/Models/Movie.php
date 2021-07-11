@@ -22,7 +22,6 @@ class Movie extends Model
         'year',
         'long_time',
         'rating',
-        'schedule_id',
     ];
 
     /**
@@ -41,7 +40,6 @@ class Movie extends Model
         'year' => 'integer',
         'long_time' => 'double',
         'rating' => 'double',
-        'schedule_id' => 'integer',
     ];
 
     /**
@@ -59,6 +57,5 @@ class Movie extends Model
         'year' => 'nullable|integer|max:100',
         'long_time' => 'nullable|integer|max:100',
         'rating' => 'nullable|integer|max:100',
-        'schedule_id' => 'required|integer',
     ];
 }

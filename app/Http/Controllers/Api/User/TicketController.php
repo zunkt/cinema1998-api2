@@ -58,13 +58,12 @@ class TicketController extends Controller
             'name' => 'required|string|max:100',
             'schedule_id' => 'required|int',
             'user_id' => 'required|int',
-            'bill_id' => 'required|int',
         ]);
 
         if ($validator->fails()) {
             return $this->response(200, [], '', $validator->errors(), [], false);
         }
-        $input = $request->only(['name', 'schedule_id', 'user_id', 'bill_id']);
+        $input = $request->only(['name', 'schedule_id', 'user_id']);
         $isExitSche = $this->scheRepo->find($request->schedule_id);
         $isExitUser = $this->userRepo->find($request->user_id);
         $isExitBill = $this->billRepo->find($request->bill_id);
@@ -121,14 +120,13 @@ class TicketController extends Controller
             'name' => 'required|string|max:100',
             'schedule_id' => 'required|int',
             'user_id' => 'required|int',
-            'bill_id' => 'required|int',
         ]);
 
         if ($validator->fails()) {
             return $this->response(200, [], '', $validator->errors(), [], false);
         }
 
-        $input = $request->only(['name', 'schedule_id', 'user_id', 'bill_id']);
+        $input = $request->only(['name', 'schedule_id', 'user_id']);
 
         $ticket = $this->ticRepo->find($id);
 

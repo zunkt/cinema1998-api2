@@ -5,15 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Room extends Model
+class Seat extends Model
 {
-    public $table = 'room';
+    public $table = 'seat';
 
     public $fillable = [
-        'name',
-        'room_number',
-        'theater_id',
-        'schedule_id',
+        'seat_number',
+        'ticket_id',
+        'room_id',
     ];
 
     /**
@@ -23,10 +22,9 @@ class Room extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'name' => 'string',
-        'room_number' => 'integer',
-        'theater_id' => 'integer',
-        'schedule_id' => 'integer',
+        'seat_number' => 'integer',
+        'ticket_id' => 'integer',
+        'room_id' => 'integer',
     ];
 
     /**
@@ -36,8 +34,8 @@ class Room extends Model
      */
     public static $rules = [
         'name' => 'required|string|max:100',
-        'room_number' => 'required|integer|max:100',
-        'theater_id' => 'required|integer|max:100',
-        'schedule_id' => 'required|integer|max:100',
+        'seat_number' => 'require|integer|max:100',
+        'ticket_id' => 'require|integer|max:100',
+        'room_id' => 'require|integer|max:100',
     ];
 }

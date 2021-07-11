@@ -51,23 +51,17 @@ class TheaterController extends Controller
             'name' => 'required|string|max:100',
             'address' => 'nullable|string|max:100',
             'phone' => 'nullable|string|max:100',
-            'movie_id' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
             return $this->response(422, [], '', $validator->errors(), [], false);
         }
-        $input = $request->only(['name', 'address', 'phone', 'movie_id']);
+        $input = $request->only(['name', 'address', 'phone']);
 
         $checkName = $this->theaRepo->all(['name' => $input['name']]);
-        $isExitMovie = $this->movieRepo->find($request->movie_id);
 
         if (count($checkName)) {
             return $this->response(422, [], __('text.has_been_registered', ['model' => 'Name']), [], null, false);
-        }
-
-        if (!$isExitMovie) {
-            return $this->response(422, [], __('text.not_found', ['model' => 'Movie Id']), [], null, false);
         }
 
         $theater = $this->theaRepo->create($input);
@@ -104,22 +98,16 @@ class TheaterController extends Controller
             'name' => 'required|string|max:100',
             'address' => 'nullable|string|max:100',
             'phone' => 'nullable|string|max:100',
-            'movie_id' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
             return $this->response(422, [], '', $validator->errors(), [], false);
         }
 
-        $input = $request->only(['name', 'schedule_id', 'user_id', 'bill_id']);
+        $input = $request->only(['name', 'schedule_id', 'user_id']);
 
         if (empty($this->theaRepo->find($id))) {
             return $this->response(404, [], __('text.not_found', ['model' => 'Theater']), [], false);
-        }
-
-        $isExitMovie = $this->movieRepo->find($request->movie_id);
-        if (!$isExitMovie) {
-            return $this->response(404, [], __('text.not_found', ['model' => 'Movie Id']), [], null, false);
         }
 
         $theater = $this->theaRepo->update($input, $id);

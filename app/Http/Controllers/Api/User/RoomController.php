@@ -49,14 +49,15 @@ class RoomController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:100',
-            'chair_number' => 'required|integer|max:100',
-            'theater_id' => 'required|integer'
+            'room_number' => 'required|integer|max:100',
+            'theater_id' => 'required|integer',
+            'schedule_id' => 'required|integer'
         ]);
 
         if ($validator->fails()) {
             return $this->response(422, [], '', $validator->errors());
         }
-        $input = $request->only(['name', 'chair_number', 'theater_id']);
+        $input = $request->only(['name', 'room_number', 'theater_id', 'schedule_id']);
 
         $checkName = $this->roomRepo->all(['name' => $input['name']]);
 
@@ -102,15 +103,16 @@ class RoomController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:100',
-            'chair_number' => 'required|integer|max:100',
-            'theater_id' => 'required|integer'
+            'room_number' => 'required|integer|max:100',
+            'theater_id' => 'required|integer',
+            'schedule_id' => 'required|integer'
         ]);
 
         if ($validator->fails()) {
             return $this->response(422, [], '', $validator->errors());
         }
 
-        $input = $request->only(['name', 'chair_number', 'theater_id']);
+        $input = $request->only(['name', 'room_number', 'theater_id', 'schedule_id']);
 
         if (empty($this->roomRepo->find($id))) {
             return $this->response(422, [], __('text.not_found', ['model' => 'Room']));

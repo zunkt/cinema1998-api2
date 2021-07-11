@@ -16,6 +16,7 @@ class Schedule extends Model
         'name',
         'time_start',
         'time_end',
+        'movie_id'
     ];
 
     /**
@@ -28,6 +29,7 @@ class Schedule extends Model
         'name' => 'string',
         'time_start' => 'datetime',
         'time_end' => 'datetime',
+        'movie_id' => 'integer',
     ];
 
     /**
