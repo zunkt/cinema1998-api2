@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 
 class Movie extends Model
 {
@@ -11,6 +13,7 @@ class Movie extends Model
 
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
+    protected $appends = ['image_url'];
 
     public $fillable = [
         'name',
@@ -58,4 +61,20 @@ class Movie extends Model
         'long_time' => 'nullable|integer|max:100',
         'rating' => 'nullable|integer|max:100',
     ];
+
+    /**
+     * @return hasMany
+     **/
+    public function feedback()
+    {
+        return $this->hasMany(\App\Models\FeedBack::class, 'movie_id');
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getImageUrlAttribute()
+    {
+        return Storage::exists($this->image) ? Storage::url($this->image) : null;
+    }
 }

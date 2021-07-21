@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Theater extends Model
 {
@@ -38,4 +39,12 @@ class Theater extends Model
         'phone' => 'nullable|string|max:100',
         'created_at' => 'required',
     ];
+
+    /**
+     * @return hasMany
+     **/
+    public function room()
+    {
+        return $this->hasMany(\App\Models\Room::class, 'theater_id');
+    }
 }

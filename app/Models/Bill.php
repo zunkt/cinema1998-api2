@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Bill extends Model
 {
@@ -41,4 +42,13 @@ class Bill extends Model
         'ticket_id' => 'required|integer|max:100',
         'created_at' => 'required',
     ];
+
+    //Relation
+    /**
+     * @return BelongsTo
+     **/
+    public function ticket()
+    {
+        return $this->belongsTo(\App\Models\Ticket::class, 'ticket_id');
+    }
 }

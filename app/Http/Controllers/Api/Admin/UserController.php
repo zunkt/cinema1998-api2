@@ -118,16 +118,10 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'phone' => 'string|max:20',
-            'name' => 'string|max:255',
-            'ticket' => 'integer',
-            'no_show' => 'integer',
-            'is_65' => 'boolean',
-            'is_pregnant' => 'boolean',
-            'is_child' => 'boolean',
-            'child_age' => 'integer',
-            'approve' => 'boolean',
-            'reject' => 'required_if:approve,=,false'
+            'email' => 'required|email:rfc,dns',
+            'full_name' => 'required|string|max:255',
+            'address' => 'nullable|string|max:255',
+            'identityNumber' => 'nullable|string|max:255',
         ]);
 
         if ($validator->fails()) {
@@ -140,7 +134,7 @@ class UserController extends Controller
             return $this->response(422, [], __('text.this_user_is_invalid'));
         }
 
-        $input = $request->only(['phone', 'name', 'ticket', 'no_show', 'is_65', 'is_pregnant', 'is_child', 'child_age']);
+        $input = $request->only(['email', 'full_name', 'address', 'identityNumber']);
 
         if (isset($request->approve)) {
             $input['is_approved'] = $request->approve;

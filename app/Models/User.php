@@ -70,6 +70,13 @@ class User extends  Authenticatable implements JWTSubject, CanResetPassword
     ];
 
     //Relation
+    /**
+     * @return HasMany
+     **/
+    public function ticket()
+    {
+        return $this->hasMany(\App\Models\Ticket::class, 'user_id');
+    }
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.

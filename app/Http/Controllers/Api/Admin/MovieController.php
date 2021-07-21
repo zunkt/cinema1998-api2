@@ -62,15 +62,13 @@ class MovieController extends Controller
         if ($validator->fails()) {
             return $this->response(422, [], '', $validator->errors());
         }
-        $input = $request->only(['name', 'image', 'trailer_url', 'director',
+        $input = $request->only(['name', 'trailer_url', 'director',
             'language', 'actor', 'year', 'long_time', 'rating']);
-
+        $input['image'] = '';
         $movie = $this->movieRepo->create($input);
-
         //Validate mine type image
-        if (request()->image && !!$input['image']) {
+        if ($request->image) {
             $file = request()->file('image');
-
             //Get mimetype
             $mimeType = $file->getMimeType();
 

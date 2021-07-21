@@ -90,8 +90,9 @@ class TicketController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function show($id)
     {
@@ -115,15 +116,13 @@ class TicketController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:100',
-            'schedule_id' => 'required|integer',
-            'user_id' => 'required|integer',
         ]);
 
         if ($validator->fails()) {
             return $this->response(422, [], '', $validator->errors());
         }
 
-        $input = $request->only(['name', 'schedule_id', 'user_id']);
+        $input = $request->only(['name']);
 
         $ticket = $this->ticRepo->find($id);
 

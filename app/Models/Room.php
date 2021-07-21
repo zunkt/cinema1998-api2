@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Room extends Model
 {
@@ -40,4 +42,28 @@ class Room extends Model
         'theater_id' => 'required|integer|max:100',
         'schedule_id' => 'required|integer|max:100',
     ];
+
+    /**
+     * @return hasMany
+     **/
+    public function room()
+    {
+        return $this->hasMany(\App\Models\Seat::class, 'room_id');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function schedule()
+    {
+        return $this->belongsToMany(\App\Models\Schedule::class, 'schedule_id');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function theater()
+    {
+        return $this->belongsToMany(\App\Models\Theater::class, 'theater_id');
+    }
 }

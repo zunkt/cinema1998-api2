@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Schedule extends Model
 {
@@ -41,4 +42,29 @@ class Schedule extends Model
         'name' => 'required|string|max:100',
         'created_at' => 'required',
     ];
+
+    //Relation
+    /**
+     * @return hasMany
+     **/
+    public function ticket()
+    {
+        return $this->hasMany(\App\Models\Ticket::class, 'schedule_id');
+    }
+
+    /**
+     * @return hasMany
+     **/
+    public function room()
+    {
+        return $this->hasMany(\App\Models\Room::class, 'schedule_id');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function movie()
+    {
+        return $this->belongsToMany(\App\Models\Movie::class, 'movie_id');
+    }
 }

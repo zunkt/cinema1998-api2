@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class FeedBack extends Model
 {
@@ -37,4 +38,12 @@ class FeedBack extends Model
         'content' => 'required|string|max:100',
         'created_at' => 'required',
     ];
+
+    /**
+     * @return BelongsToMany
+     */
+    public function movie()
+    {
+        return $this->belongsToMany(\App\Models\Movie::class, 'movie_id');
+    }
 }

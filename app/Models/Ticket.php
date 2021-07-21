@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Ticket extends Model
 {
@@ -37,6 +40,41 @@ class Ticket extends Model
      */
     public static $rules = [
         'name' => 'required|string|max:100',
+        'user_id' => 'integer',
+        'schedule_id' => 'integer',
         'created_at' => 'required',
     ];
+
+    //Relation
+    /**
+     * @return BelongsTo
+     **/
+    public function schedule()
+    {
+        return $this->belongsTo(\App\Models\Schedule::class, 'schedule_id');
+    }
+
+    /**
+     * @return BelongsTo
+     **/
+    public function user()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'user_id');
+    }
+
+    /**
+     * @return HasOne
+     **/
+    public function bill()
+    {
+        return $this->hasOne(\App\Models\Bill::class, 'ticket_id');
+    }
+
+    /**
+     * @return HasOne
+     **/
+    public function seat()
+    {
+        return $this->hasOne(\App\Models\Seat::class, 'ticket_id');
+    }
 }

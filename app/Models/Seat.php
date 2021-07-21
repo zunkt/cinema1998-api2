@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Seat extends Model
 {
@@ -38,4 +40,21 @@ class Seat extends Model
         'ticket_id' => 'require|integer|max:100',
         'room_id' => 'require|integer|max:100',
     ];
+
+    //Relation
+    /**
+     * @return BelongsTo
+     **/
+    public function ticket()
+    {
+        return $this->belongsTo(\App\Models\Ticket::class, 'ticket_id');
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function room()
+    {
+        return $this->belongsToMany(\App\Models\Room::class, 'room_id');
+    }
 }
