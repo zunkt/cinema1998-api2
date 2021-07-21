@@ -12,6 +12,7 @@ class Seat extends Model
     public $table = 'seat';
 
     public $fillable = [
+        'name',
         'seat_number',
         'ticket_id',
         'room_id',
@@ -24,6 +25,7 @@ class Seat extends Model
      */
     protected $casts = [
         'id' => 'integer',
+        'name' => 'string',
         'seat_number' => 'integer',
         'ticket_id' => 'integer',
         'room_id' => 'integer',

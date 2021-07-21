@@ -122,4 +122,13 @@ Route::group(['middleware' => 'auth:admin'], function () {
         Route::post('update/{id}', [FaqController::class, 'update']);
         Route::post('delete/{id}', [FaqController::class, 'destroy']);
     });
+
+    // Resource Seat
+    Route::group(['prefix' => 'seat'], function () {
+        Route::get('all', [SeatController::class, 'index']);
+        Route::get('show/{id}', [SeatController::class, 'show']);
+        Route::post('store', [SeatController::class, 'store']);
+        Route::post('update/{id}', [SeatController::class, 'update']);
+        Route::post('delete/{id}', [SeatController::class, 'destroy']);
+    });
 });

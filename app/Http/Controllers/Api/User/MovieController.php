@@ -60,23 +60,15 @@ class MovieController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->response(200, [], '', $validator->errors(), [], null, false);
+            return $this->response(422, [], '', $validator->errors());
         }
-        $input = $request->only(['name', 'image', 'trailer_url', 'director',
+        $input = $request->only(['name', 'trailer_url', 'director',
             'language', 'actor', 'year', 'long_time', 'rating']);
-
-        $isExitSche = $this->scheRepo->find($request->schedule_id);
-
-        if (!$isExitSche) {
-            return $this->response(200, [], __('text.not_found', ['model' => 'Sche Id']), [], null, false);
-        }
-
+        $input['image'] = '';
         $movie = $this->movieRepo->create($input);
-
         //Validate mine type image
-        if (request()->image && !!$input['image']) {
+        if ($request->image) {
             $file = request()->file('image');
-
             //Get mimetype
             $mimeType = $file->getMimeType();
 
@@ -85,7 +77,7 @@ class MovieController extends Controller
 
             //Validate image
             if ($typeFile != 'image') {
-                return $this->response(200, null, __('text.only_upload_file_image'), [], null, false);
+                return $this->response(422, null, __('text.only_upload_file_image'));
             }
 
             //Path save image upload
@@ -115,7 +107,7 @@ class MovieController extends Controller
         $movie = $this->movieRepo->find($id);
 
         if (empty($movie)) {
-            return $this->response(200, [], __('text.is_invalid'), [], null, false);
+            return $this->response(200, [], __('text.not_found', ['model' => 'Movie']), [], null, false);
         }
 
         return $this->response(200, ['movie' => new MovieResource($movie)], __('text.retrieved_successfully'), [], null, true);
@@ -143,16 +135,10 @@ class MovieController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->response(200, [], '', $validator->errors(), [], null, false);
+            return $this->response(422, [], '', $validator->errors());
         }
         $input = $request->only(['name', 'image', 'trailer_url', 'director',
             'language', 'actor', 'year', 'long_time', 'rating']);
-
-        $isExitSche = $this->scheRepo->find($request->schedule_id);
-
-        if (!$isExitSche) {
-            return $this->response(200, [], __('text.not_found', ['model' => 'Sche Id']), [], null, false);
-        }
 
         $movie = $this->movieRepo->find($id);
 
@@ -172,7 +158,7 @@ class MovieController extends Controller
 
             //Validate image
             if ($typeFile != 'image') {
-                return $this->response(200, null, __('text.only_upload_file_image'), [], null, false);
+                return $this->response(422, null, __('text.only_upload_file_image'));
             }
             //Path save image upload
             $resPathUpload = 'uploads/movie/' . $movie->id . '/' . uniqid();
@@ -206,6 +192,6 @@ class MovieController extends Controller
 
         $this->movieRepo->delete($id);
 
-        return $this->response(200, null, __('text.delete_successfully'));
+        return $this->response(200, null, __('text.delete_successfully', ['model' => 'Movie']));
     }
 }
