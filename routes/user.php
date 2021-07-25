@@ -91,6 +91,7 @@ Route::group(['middleware' => 'auth:user'], function () {
     // Resource Room
     Route::group(['prefix' => 'room'], function () {
         Route::get('all', [RoomController::class, 'index']);
+        Route::get('get', [RoomController::class, 'get']);
         Route::get('show/{id}', [RoomController::class, 'show']);
         Route::post('store', [RoomController::class, 'store']);
         Route::post('update/{id}', [RoomController::class, 'update']);

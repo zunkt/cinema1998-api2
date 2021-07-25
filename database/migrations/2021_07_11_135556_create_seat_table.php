@@ -17,6 +17,7 @@ class CreateSeatTable extends Migration
             $table->integer('id', true);
             $table->string('name');
             $table->integer('seat_number');
+            $table->integer('status')->default(0);
             $table->integer('ticket_id');
             $table->integer('room_id');
             $table->dateTime('created_at');

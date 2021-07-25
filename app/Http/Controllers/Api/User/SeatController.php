@@ -46,6 +46,7 @@ class SeatController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:100',
             'seat_number' => 'required|integer|max:100',
+            'status' => 'required|integer|max:100',
             'ticket_id' => 'required|integer|max:100',
             'room_id' => 'required|integer|max:100',
         ]);
@@ -54,7 +55,7 @@ class SeatController extends Controller
             return $this->response(422, [], '', $validator->errors(), [], false);
         }
 
-        $input = $request->only(['name', 'seat_number', 'ticket_id', 'room_id']);
+        $input = $request->only(['name', 'seat_number', 'ticket_id', 'room_id', 'status']);
         $seat = $this->seatRepo->create($input);
         return $this->response(200, ['seat' => new SeatResource($seat = $this->seatRepo->find($seat->id))], __('text.register_successfully'));
     }
@@ -88,6 +89,7 @@ class SeatController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:100',
             'seat_number' => 'required|integer|max:100',
+            'status' => 'required|integer|max:100',
             'ticket_id' => 'required|integer|max:100',
             'room_id' => 'required|integer|max:100',
         ]);
@@ -96,7 +98,7 @@ class SeatController extends Controller
             return $this->response(422, [], '', $validator->errors(), [], false);
         }
 
-        $input = $request->only(['name', 'seat_number', 'ticket_id', 'room_id']);
+        $input = $request->only(['name', 'seat_number', 'ticket_id', 'room_id', 'status']);
 
         if (empty($this->seatRepo->find($id))) {
             return $this->response(404, [], __('text.not_found', ['model' => 'Seat']), [], false);

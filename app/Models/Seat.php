@@ -14,6 +14,7 @@ class Seat extends Model
     public $fillable = [
         'name',
         'seat_number',
+        'status',
         'ticket_id',
         'room_id',
     ];
@@ -27,6 +28,7 @@ class Seat extends Model
         'id' => 'integer',
         'name' => 'string',
         'seat_number' => 'integer',
+        'status' => 'integer',
         'ticket_id' => 'integer',
         'room_id' => 'integer',
     ];
@@ -39,6 +41,7 @@ class Seat extends Model
     public static $rules = [
         'name' => 'required|string|max:100',
         'seat_number' => 'require|integer|max:100',
+        'status' => 'required|integer|max:100',
         'ticket_id' => 'require|integer|max:100',
         'room_id' => 'require|integer|max:100',
     ];

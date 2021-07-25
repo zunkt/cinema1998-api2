@@ -59,14 +59,9 @@ class TheaterController extends Controller
         $input = $request->only(['name', 'address', 'phone']);
 
         $checkName = $this->theaRepo->all(['name' => $input['name']]);
-        $isExitMovie = $this->movieRepo->find($request->movie_id);
 
         if (count($checkName)) {
             return $this->response(200, [], __('text.has_been_registered', ['model' => 'Name']), [], null, false);
-        }
-
-        if (!$isExitMovie) {
-            return $this->response(200, [], __('text.not_found', ['model' => 'Movie Id']), [], null, false);
         }
 
         $theater = $this->theaRepo->create($input);

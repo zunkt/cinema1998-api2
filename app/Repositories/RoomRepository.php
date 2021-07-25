@@ -20,8 +20,9 @@ class RoomRepository extends BaseRepository
      */
     protected $fieldSearchable = [
         'name',
-        'chair_number',
+        'room_number',
         'theater_id',
+        'schedule_id',
     ];
 
     /**
@@ -60,6 +61,12 @@ class RoomRepository extends BaseRepository
             foreach ($request->sorters as $sort) {
                 $query->orderBy($sort['field'], $sort['dir']);
             }
+        }
+
+        if (isset($request->theater) && isset($request->schedule)) {
+            $query->where('theater_id', $request->theater)
+                  ->where('schedule_id', $request->schedule)
+            ;
         }
 
         return $query;
