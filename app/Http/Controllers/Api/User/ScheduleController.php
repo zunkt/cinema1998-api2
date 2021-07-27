@@ -47,21 +47,16 @@ class ScheduleController extends Controller
             'name' => 'required|string|max:100',
             'time_start' => 'nullable',
             'time_end' => 'nullable',
-            'schedule_id' => 'required|integer|max:100',
+            'movie_id' => 'required|int'
         ]);
 
         if ($validator->fails()) {
             return $this->response(200, [], '', $validator->errors(), [], false);
         }
-        $input = $request->only(['name', 'time_start', 'time_end', 'schedule_id']);
+        $input = $request->only(['name', 'time_start', 'time_end', 'movie_id']);
 
-        $checkName = $this->scheRepo->all(['name' => $input['name']]);
-
-        if (count($checkName)) {
-            return $this->response(200, [], __('text.has_been_registered', ['model' => 'Name']), [], null, false);
-        }
-        $schedule = $this->scheRepo->create($input);
-        return $this->response(200, ['schedule' => new ScheduleResource($schedule)], __('text.register_successfully'));
+        $schedule =  $this->scheRepo->create($input);
+        return $this->response(200, ['schedule' => new ScheduleResource($this->scheRepo->find($schedule->id))], __('text.register_successfully'), [], false, true);
     }
 
     /**
@@ -94,24 +89,24 @@ class ScheduleController extends Controller
             'name' => 'required|string|max:100',
             'time_start' => 'nullable',
             'time_end' => 'nullable',
-            'schedule_id' => 'required|integer|max:100',
+            'movie_id' => 'required|int'
         ]);
 
         if ($validator->fails()) {
             return $this->response(200, [], '', $validator->errors(), [], false);
         }
 
-        $input = $request->only(['name', 'time_start', 'time_end', 'schedule_id']);
+        $input = $request->only(['name', 'time_start', 'time_end', 'movie_id']);
 
         $schedule = $this->scheRepo->find($id);
 
         if (empty($schedule)) {
-            return $this->response(200, [], __('text.not_found', ['model' => 'Schedule']), [], false);
+            return $this->response(200, [], __('text.not_found', ['model' => 'Schedule']), [], false, false);
         }
 
         $schedule = $this->scheRepo->update($input, $id);
 
-        return $this->response(200, ['schedule' => new ScheduleResource($schedule)], __('text.update_successfully'));
+        return $this->response(200, ['schedule' => new ScheduleResource($schedule)], __('text.update_successfully'), [], false, true);
     }
 
     /**
