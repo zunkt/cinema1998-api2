@@ -57,13 +57,17 @@ class MovieController extends Controller
             'year' => 'nullable|integer',
             'long_time' => 'nullable|integer|max:100',
             'rating' => 'nullable|integer|max:100',
+            'descriptionContent' => 'nullable|string|max:100',
+            'type' => 'nullable|string|max:100',
         ]);
 
         if ($validator->fails()) {
             return $this->response(422, [], '', $validator->errors());
         }
-        $input = $request->only(['name', 'trailer_url', 'director',
-            'language', 'actor', 'year', 'long_time', 'rating']);
+
+        $input = $request->only(['name', 'image', 'trailer_url', 'director',
+            'language', 'actor', 'year', 'long_time', 'rating', 'descriptionContent', 'type']);
+
         $input['image'] = '';
         $movie = $this->movieRepo->create($input);
         //Validate mine type image
@@ -132,13 +136,16 @@ class MovieController extends Controller
             'year' => 'nullable|integer',
             'long_time' => 'nullable|integer|max:100',
             'rating' => 'nullable|integer|max:100',
+            'descriptionContent' => 'nullable|string|max:100',
+            'type' => 'nullable|string|max:100',
+            'slot' => 'nullable|integer|max:100',
         ]);
 
         if ($validator->fails()) {
             return $this->response(422, [], '', $validator->errors());
         }
         $input = $request->only(['name', 'image', 'trailer_url', 'director',
-            'language', 'actor', 'year', 'long_time', 'rating']);
+            'language', 'actor', 'year', 'long_time', 'rating', 'descriptionContent', 'type', 'slot']);
 
         $movie = $this->movieRepo->find($id);
 

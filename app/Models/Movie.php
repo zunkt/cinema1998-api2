@@ -25,6 +25,10 @@ class Movie extends Model
         'year',
         'long_time',
         'rating',
+        'descriptionContent',
+        'type',
+        'slot',
+        'imageText'
     ];
 
     /**
@@ -43,6 +47,10 @@ class Movie extends Model
         'year' => 'integer',
         'long_time' => 'double',
         'rating' => 'double',
+        'descriptionContent' => 'string',
+        'type' => 'string',
+        'slot' => 'integer',
+        'imageText' => 'string',
     ];
 
     /**
@@ -60,7 +68,14 @@ class Movie extends Model
         'year' => 'nullable|integer|max:100',
         'long_time' => 'nullable|integer|max:100',
         'rating' => 'nullable|integer|max:100',
+        'descriptionContent' => 'nullable|string|max:100',
+        'type' => 'nullable|string|max:100',
+        'slot' => 'nullable|integer|max:100',
+        'imageText' => 'nullable|string|max:100',
     ];
+    /**
+     * @var mixed
+     */
 
     /**
      * @return hasMany

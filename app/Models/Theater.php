@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Theater extends Model
 {
+    use HasFactory;
+
     public $table = 'theater';
 
     public $fillable = [
