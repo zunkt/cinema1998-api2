@@ -4,11 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Room extends Model
 {
+    use HasFactory;
+
     public $table = 'room';
 
     public $fillable = [
@@ -60,10 +63,10 @@ class Room extends Model
     }
 
     /**
-     * @return BelongsToMany
+     * @return BelongsTo
      */
     public function theater()
     {
-        return $this->belongsToMany(\App\Models\Theater::class, 'theater_id');
+        return $this->belongsTo(\App\Models\Theater::class, 'theater_id');
     }
 }

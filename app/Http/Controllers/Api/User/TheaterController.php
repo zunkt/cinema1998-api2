@@ -35,8 +35,8 @@ class TheaterController extends Controller
     public function index(Request $request)
     {
         $pages = intval($request->size);
-        $theater = $this->theaRepo->theaterSearch($request)->paginate($pages);
-        return $this->response(200, ['theater' => new TheaterCollection($theater)], __('text.retrieved_successfully'));
+        $theater = $this->theaRepo->theaterSearch($request)->with('room')->paginate($pages);
+        return $this->response(200, ['theater' => new TheaterCollection($theater)], __('text.retrieved_successfully'), [], null, true);
     }
 
     /**
@@ -60,7 +60,7 @@ class TheaterController extends Controller
         $input = $request->only(['name', 'address', 'phone', 'direction']);
 
         $theater = $this->theaRepo->create($input);
-        return $this->response(200, ['theater' => new TheaterResource($theater = $this->theaRepo->find($theater->id))], __('text.register_successfully'));
+        return $this->response(200, ['theater' => new TheaterResource($theater = $this->theaRepo->find($theater->id))], __('text.register_successfully'), [], null, true);
     }
 
     /**
@@ -71,7 +71,7 @@ class TheaterController extends Controller
      */
     public function show($id)
     {
-        $theater = $this->theaRepo->find($id);
+        $theater = $this->theaRepo->makeModel()->with('room')->find($id);
 
         if (empty($theater)) {
             return $this->response(200, [], __('text.not_found', ['model' => 'Theater']), [], null, false);
@@ -107,7 +107,7 @@ class TheaterController extends Controller
         }
 
         $theater = $this->theaRepo->update($input, $id);
-        return $this->response(200, ['theater' => new TheaterResource($theater)], __('text.update_successfully'));
+        return $this->response(200, ['theater' => new TheaterResource($theater)], __('text.update_successfully'), [], null, true);
     }
 
     /**
