@@ -51,18 +51,13 @@ class TheaterController extends Controller
             'name' => 'required|string|max:100',
             'address' => 'nullable|string|max:100',
             'phone' => 'nullable|string|max:100',
+            'direction' => 'nullable|string|max:100',
         ]);
 
         if ($validator->fails()) {
             return $this->response(422, [], '', $validator->errors(), [], false);
         }
-        $input = $request->only(['name', 'address', 'phone']);
-
-        $checkName = $this->theaRepo->all(['name' => $input['name']]);
-
-        if (count($checkName)) {
-            return $this->response(422, [], __('text.has_been_registered', ['model' => 'Name']), [], null, false);
-        }
+        $input = $request->only(['name', 'address', 'phone', 'direction']);
 
         $theater = $this->theaRepo->create($input);
         return $this->response(200, ['theater' => new TheaterResource($theater = $this->theaRepo->find($theater->id))], __('text.register_successfully'));
@@ -98,13 +93,14 @@ class TheaterController extends Controller
             'name' => 'required|string|max:100',
             'address' => 'nullable|string|max:100',
             'phone' => 'nullable|string|max:100',
+            'direction' => 'nullable|string|max:100',
         ]);
 
         if ($validator->fails()) {
             return $this->response(422, [], '', $validator->errors(), [], false);
         }
 
-        $input = $request->only(['name', 'schedule_id', 'user_id']);
+        $input = $request->only(['name', 'address', 'phone', 'direction']);
 
         if (empty($this->theaRepo->find($id))) {
             return $this->response(404, [], __('text.not_found', ['model' => 'Theater']), [], false);

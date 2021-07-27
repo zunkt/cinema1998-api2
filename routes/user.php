@@ -70,24 +70,6 @@ Route::group(['middleware' => 'auth:user'], function () {
         Route::post('delete/{id}', [FeedBackController::class, 'destroy']);
     });
 
-    // Resource Movie
-    Route::group(['prefix' => 'movie'], function () {
-        Route::get('all', [MovieController::class, 'index']);
-        Route::get('show/{id}', [MovieController::class, 'show']);
-        Route::post('store', [MovieController::class, 'store']);
-        Route::post('update/{id}', [MovieController::class, 'update']);
-        Route::post('delete/{id}', [MovieController::class, 'destroy']);
-    });
-
-    // Resource Theater
-    Route::group(['prefix' => 'theater'], function () {
-        Route::get('all', [TheaterController::class, 'index']);
-        Route::get('show/{id}', [TheaterController::class, 'show']);
-        Route::post('store', [TheaterController::class, 'store']);
-        Route::post('update/{id}', [TheaterController::class, 'update']);
-        Route::post('delete/{id}', [TheaterController::class, 'destroy']);
-    });
-
     // Resource Room
     Route::group(['prefix' => 'room'], function () {
         Route::get('all', [RoomController::class, 'index']);
@@ -126,3 +108,20 @@ Route::group(['middleware' => 'auth:user'], function () {
     });
 });
 
+// Resource Movie
+Route::group(['prefix' => 'movie'], function () {
+    Route::get('all', [MovieController::class, 'index']);
+    Route::get('show/{id}', [MovieController::class, 'show']);
+    Route::post('store', [MovieController::class, 'store']);
+    Route::post('update/{id}', [MovieController::class, 'update']);
+    Route::post('delete/{id}', [MovieController::class, 'destroy']);
+});
+
+// Resource Theater
+Route::group(['prefix' => 'theater'], function () {
+    Route::get('all', [TheaterController::class, 'index']);
+    Route::get('show/{id}', [TheaterController::class, 'show']);
+    Route::post('store', [TheaterController::class, 'store']);
+    Route::post('update/{id}', [TheaterController::class, 'update']);
+    Route::post('delete/{id}', [TheaterController::class, 'destroy']);
+});

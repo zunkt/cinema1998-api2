@@ -14,6 +14,7 @@ class Theater extends Model
         'name',
         'address',
         'phone',
+        'direction',
     ];
 
     /**
@@ -26,6 +27,7 @@ class Theater extends Model
         'name' => 'string',
         'address' => 'string',
         'phone' => 'string',
+        'direction' => 'string',
     ];
 
     /**
@@ -37,6 +39,7 @@ class Theater extends Model
         'name' => 'required|string|max:100',
         'address' => 'nullable|string|max:100',
         'phone' => 'nullable|string|max:100',
+        'direction' => 'nullable|string|max:100',
         'created_at' => 'required',
     ];
 
