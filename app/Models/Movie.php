@@ -28,7 +28,8 @@ class Movie extends Model
         'descriptionContent',
         'type',
         'slot',
-        'imageText'
+        'imageText',
+        'backgroundImage'
     ];
 
     /**
@@ -51,6 +52,7 @@ class Movie extends Model
         'type' => 'string',
         'slot' => 'integer',
         'imageText' => 'string',
+        'backgroundImage' => 'string'
     ];
 
     /**
@@ -68,10 +70,11 @@ class Movie extends Model
         'year' => 'nullable|integer|max:100',
         'long_time' => 'nullable|integer|max:100',
         'rating' => 'nullable|integer|max:100',
-        'descriptionContent' => 'nullable|string|max:100',
+        'descriptionContent' => 'nullable|string',
         'type' => 'nullable|string|max:100',
         'slot' => 'nullable|integer|max:100',
-        'imageText' => 'nullable|string|max:100',
+        'imageText' => 'nullable|string',
+        'backgroundImage' => 'nullable|string|max:100',
     ];
     /**
      * @var mixed

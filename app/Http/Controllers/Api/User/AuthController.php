@@ -53,13 +53,13 @@ class AuthController extends Controller
             ]
         ]);
         if ($validator->fails()) {
-            return $this->response(422, [], '', $validator->errors());
+            return $this->response(200, [], '', $validator->errors(), [], null, false);
         }
 
         // Validate Password
         // Password
         if (!$this->validateRulePassword(request()->password)) {
-            return $this->response(422, [], __('text.password_invalid_rule'));
+            return $this->response(200, [], __('text.password_invalid_rule'), [], null, false);
         }
 
         $credentials = request(['email', 'password']);
@@ -78,11 +78,11 @@ class AuthController extends Controller
                     $status = Password::sendResetLink(request()->only('email'));
                     $code = $status === Password::RESET_LINK_SENT ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST;
 
-                    return $this->response(422, [], __('text.check_email_reset_pass'));
+                    return $this->response(200, [], __('text.check_email_reset_pass'), [], null, false);
                 }
-                return $this->response(422, [], __('auth.password'));
+                return $this->response(200, [], __('auth.password'), [], null, false);
             }
-            return $this->response(401, [], __('auth.failed'));
+            return $this->response(200, [], __('auth.failed'), [], null, false);
         }
         $user = User::find(auth('user')->id());
 
@@ -104,7 +104,7 @@ class AuthController extends Controller
         $user = auth('user')->user();
 
         if (!$user) {
-            return $this->response(401, [], __('auth.not_authenticated'));
+            return $this->response(200, [], __('auth.not_authenticated'), [], null, false);
         }
 
         return $this->response(200, ['user' => $user]);
@@ -132,13 +132,13 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->response(422, [], '', $validator->errors());
+            return $this->response(200, [], '', $validator->errors(), [],  false);
         }
 
         $user = User::where(['email' => $request->email])->first();
 
         if (!$user) {
-            return $this->response(404, null, __('text.this_user_is_invalid'));
+            return $this->response(200, null, __('text.this_user_is_invalid'), [], null, false);
         }
 
         $status = Password::broker('users')->sendResetLink($request->only('email'));
@@ -161,7 +161,7 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
         if ($validator->fails()) {
-            return $this->response(422, [], '', $validator->errors());
+            return $this->response(200, [], '', $validator->errors(), [], false);
         }
 
         $status = Password::broker('users')->reset(
@@ -196,7 +196,7 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->response(422, [], '', $validator->errors());
+            return $this->response(200, [], '', $validator->errors(), [], false);
         }
 
         $input = $request->only(['email', 'full_name', 'address', 'identityNumber']);
@@ -204,7 +204,7 @@ class AuthController extends Controller
         $isRegistered = $this->userRepo->all(['email' => $input['email']]);
 
         if (count($isRegistered)) {
-            return $this->response(422, [], __('text.email_has_been_registered'));
+            return $this->response(200, [], __('text.email_has_been_registered'), [], null, false);
         }
 
         $password = $request->request->get('password');
@@ -236,7 +236,7 @@ class AuthController extends Controller
 
         } catch (\Throwable $th) {
             DB::rollBack();
-            return $this->response(400, [], $th->getMessage());
+            return $this->response(200, [], $th->getMessage(), [], null, false);
         }
     }
 }
