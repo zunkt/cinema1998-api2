@@ -44,9 +44,9 @@ class SeatController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:100',
-            'seat_number' => 'required|integer|max:100',
-            'status' => 'required|integer|max:100',
+            'value' => 'required|string|max:100',
+            'status' => 'required|string|max:100',
+            'price' => 'required|max:100',
             'ticket_id' => 'required|integer|max:100',
             'room_id' => 'required|integer|max:100',
         ]);
@@ -55,7 +55,7 @@ class SeatController extends Controller
             return $this->response(422, [], '', $validator->errors(), [], false);
         }
 
-        $input = $request->only(['name', 'seat_number', 'ticket_id', 'room_id', 'status']);
+        $input = $request->only(['value', 'status', 'ticket_id', 'room_id', 'price']);
         $seat = $this->seatRepo->create($input);
         return $this->response(200, ['seat' => new SeatResource($seat = $this->seatRepo->find($seat->id))], __('text.register_successfully'));
     }

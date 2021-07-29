@@ -138,7 +138,7 @@ class MovieController extends Controller
             'image' => 'nullable',
             'trailer_url' => 'nullable|string|max:100',
             'director' => 'nullable|string|max:100',
-            'language' => 'nullable|string|max:100',
+            'language' => 'nullable|max:100',
             'actor' => 'nullable|string|max:100',
             'year' => 'nullable|integer',
             'long_time' => 'nullable|integer|max:100',
@@ -157,6 +157,12 @@ class MovieController extends Controller
 
         $input = $request->only(['name', 'image', 'trailer_url', 'director',
             'language', 'releaseDate','backgroundImage','actor', 'year', 'long_time', 'rating', 'descriptionContent', 'type', 'slot', 'imageText']);
+
+        $input = $request->only(['name', 'image', 'trailer_url', 'director',
+            'language', 'releaseDate','backgroundImage','actor', 'year', 'long_time', 'rating', 'descriptionContent', 'type', 'slot', 'imageText']);
+
+        $input['language'] = json_encode($request->language);
+        $input['image'] = '';
 
         $movie = $this->movieRepo->find($id);
 

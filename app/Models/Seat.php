@@ -9,12 +9,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Seat extends Model
 {
+    use HasFactory;
     public $table = 'seat';
 
     public $fillable = [
-        'name',
-        'seat_number',
+        'value',
         'status',
+        'price',
         'ticket_id',
         'room_id',
     ];
@@ -26,9 +27,9 @@ class Seat extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'name' => 'string',
-        'seat_number' => 'integer',
-        'status' => 'integer',
+        'value' => 'string',
+        'status' => 'string',
+        'price' => 'double',
         'ticket_id' => 'integer',
         'room_id' => 'integer',
     ];
@@ -39,11 +40,11 @@ class Seat extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|string|max:100',
-        'seat_number' => 'require|integer|max:100',
-        'status' => 'required|integer|max:100',
-        'ticket_id' => 'require|integer|max:100',
-        'room_id' => 'require|integer|max:100',
+        'value' => 'required|string|max:100',
+        'status' => 'required|string|max:100',
+        'price' => 'required|max:100',
+        'ticket_id' => 'required|integer|max:100',
+        'room_id' => 'required|integer|max:100',
     ];
 
     //Relation
