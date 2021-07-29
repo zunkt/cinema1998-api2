@@ -35,7 +35,7 @@ class MovieController extends Controller
     public function index(Request $request)
     {
         $pages = intval($request->size);
-        $movie = $this->movieRepo->movieSearch($request)->paginate($pages);
+        $movie = $this->movieRepo->movieSearch($request)->with('schedule')->paginate($pages);
         return $this->response(200, ['movie' => new MovieCollection($movie)], __('text.retrieved_successfully'), [], null, true);
     }
 
@@ -62,6 +62,7 @@ class MovieController extends Controller
             'slot' => 'nullable|integer|max:100',
             'imageText' => 'nullable|string',
             'backgroundImage' => 'nullable|string',
+            'releaseDate' => 'nullable|string|max:100',
         ]);
 
 
@@ -69,7 +70,7 @@ class MovieController extends Controller
             return $this->response(422, [], '', $validator->errors());
         }
         $input = $request->only(['name', 'image', 'trailer_url', 'director',
-            'language', 'backgroundImage','actor', 'year', 'long_time', 'rating', 'descriptionContent', 'type', 'slot', 'imageText']);
+            'language', 'releaseDate','backgroundImage','actor', 'year', 'long_time', 'rating', 'descriptionContent', 'type', 'slot', 'imageText']);
 
         $input['language'] = json_encode($request->language);
         $input['image'] = '';
@@ -114,7 +115,7 @@ class MovieController extends Controller
      */
     public function show($id)
     {
-        $movie = $this->movieRepo->find($id);
+        $movie = $this->movieRepo->makeModel()->with('schedule')->find($id);
 
         if (empty($movie)) {
             return $this->response(200, [], __('text.not_found', ['model' => 'Movie']), [], null, false);
@@ -147,6 +148,7 @@ class MovieController extends Controller
             'slot' => 'nullable|integer|max:100',
             'imageText' => 'nullable|string',
             'backgroundImage' => 'nullable|string|max:100',
+            'releaseDate' => 'nullable|string|max:100',
         ]);
 
         if ($validator->fails()) {
@@ -154,7 +156,7 @@ class MovieController extends Controller
         }
 
         $input = $request->only(['name', 'image', 'trailer_url', 'director',
-            'language', 'backgroundImage','actor', 'year', 'long_time', 'rating', 'descriptionContent', 'type', 'slot', 'imageText']);
+            'language', 'releaseDate','backgroundImage','actor', 'year', 'long_time', 'rating', 'descriptionContent', 'type', 'slot', 'imageText']);
 
         $movie = $this->movieRepo->find($id);
 

@@ -29,7 +29,8 @@ class Movie extends Model
         'type',
         'slot',
         'imageText',
-        'backgroundImage'
+        'backgroundImage',
+        'releaseDate'
     ];
 
     /**
@@ -52,7 +53,8 @@ class Movie extends Model
         'type' => 'string',
         'slot' => 'integer',
         'imageText' => 'string',
-        'backgroundImage' => 'string'
+        'backgroundImage' => 'string',
+        'releaseDate' => 'string'
     ];
 
     /**
@@ -75,6 +77,7 @@ class Movie extends Model
         'slot' => 'nullable|integer|max:100',
         'imageText' => 'nullable|string',
         'backgroundImage' => 'nullable|string|max:100',
+        'releaseDate' => 'nullable|string|max:100',
     ];
     /**
      * @var mixed
@@ -86,6 +89,14 @@ class Movie extends Model
     public function feedback()
     {
         return $this->hasMany(\App\Models\FeedBack::class, 'movie_id');
+    }
+
+    /**
+     * @return hasMany
+     **/
+    public function schedule()
+    {
+        return $this->hasMany(\App\Models\Schedule::class, 'movie_id');
     }
 
     /**
