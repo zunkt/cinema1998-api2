@@ -72,7 +72,7 @@ class Movie extends Model
         'year' => 'nullable|integer|max:100',
         'long_time' => 'nullable|integer|max:100',
         'rating' => 'nullable|integer|max:100',
-        'descriptionContent' => 'nullable|string',
+        'descriptionContent' => 'nullable',
         'type' => 'nullable|string|max:100',
         'slot' => 'nullable|integer|max:100',
         'imageText' => 'nullable|string',
