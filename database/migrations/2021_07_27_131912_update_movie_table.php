@@ -15,7 +15,7 @@ class UpdateMovieTable extends Migration
     {
         Schema::table('movie', function (Blueprint $table) {
             $table->integer('slot');
-            $table->string('descriptionContent')->nullable();
+            $table->text('descriptionContent')->nullable();
             $table->string('type')->nullable();
             $table->string('imageText')->nullable();
         });
