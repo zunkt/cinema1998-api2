@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Room extends Model
 {
@@ -52,11 +53,11 @@ class Room extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     * @return HasMany
      */
     public function schedule()
     {
-        return $this->hasOne(\App\Models\Schedule::class, 'room_id');
+        return $this->hasMany(\App\Models\Schedule::class, 'room_id');
     }
 
     /**
