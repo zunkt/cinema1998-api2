@@ -233,7 +233,7 @@ class AuthController extends Controller
             });
 
             DB::commit();
-            return $this->response(200, ['user' => new UserResource($user)], __('text.register_successfully'));
+            return $this->response(200, ['user' => new UserResource($user)], __('text.register_successfully'), [], null, true);
 
         } catch (\Throwable $th) {
             DB::rollBack();
