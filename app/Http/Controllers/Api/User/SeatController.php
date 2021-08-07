@@ -31,7 +31,7 @@ class SeatController extends Controller
     public function index(Request $request)
     {
         $pages = intval($request->size);
-        $seat = $this->seatRepo->seatSearch($request)->paginate($pages);
+        $seat = $this->seatRepo->seatSearch($request)->with('room', 'schedule', 'ticket')->paginate($pages);
         return $this->response(200, ['seat' => new SeatCollection($seat)], __('text.retrieved_successfully'));
     }
 
@@ -49,13 +49,14 @@ class SeatController extends Controller
             'price' => 'required|max:100',
             'ticket_id' => 'required|integer|max:100',
             'room_id' => 'required|integer|max:100',
+            'schedule_id' => 'required|integer|max:100',
         ]);
 
         if ($validator->fails()) {
             return $this->response(422, [], '', $validator->errors(), [], false);
         }
 
-        $input = $request->only(['value', 'status', 'ticket_id', 'room_id', 'price']);
+        $input = $request->only(['value', 'status', 'ticket_id', 'room_id', 'price', 'schedule_id']);
         $seat = $this->seatRepo->create($input);
         return $this->response(200, ['seat' => new SeatResource($seat = $this->seatRepo->find($seat->id))], __('text.register_successfully'));
     }
@@ -68,7 +69,7 @@ class SeatController extends Controller
      */
     public function show($id)
     {
-        $seat = $this->seatRepo->find($id);
+        $seat = $this->seatRepo->makeModel()->with('room', 'schedule', 'ticket')->find($id);
 
         if (empty($seat)) {
             return $this->response(422, [], __('text.not_found', ['model' => 'Seat']), [], null, false);
@@ -92,13 +93,14 @@ class SeatController extends Controller
             'status' => 'required|integer|max:100',
             'ticket_id' => 'required|integer|max:100',
             'room_id' => 'required|integer|max:100',
+            'schedule_id' => 'required|integer|max:100',
         ]);
 
         if ($validator->fails()) {
             return $this->response(422, [], '', $validator->errors(), [], false);
         }
 
-        $input = $request->only(['name', 'seat_number', 'ticket_id', 'room_id', 'status']);
+        $input = $request->only(['name', 'seat_number', 'ticket_id', 'room_id', 'status', 'schedule_id']);
 
         if (empty($this->seatRepo->find($id))) {
             return $this->response(404, [], __('text.not_found', ['model' => 'Seat']), [], false);

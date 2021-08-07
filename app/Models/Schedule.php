@@ -56,6 +56,14 @@ class Schedule extends Model
     }
 
     /**
+     * @return hasMany
+     **/
+    public function seat()
+    {
+        return $this->hasMany(\App\Models\Seat::class, 'schedule_id');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function room()

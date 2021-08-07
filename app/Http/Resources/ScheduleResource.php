@@ -21,6 +21,7 @@ class ScheduleResource extends JsonResource
             'time_end' => $this->time_end,
             'movie' => $this->movie,
             'room' => $this->room,
+            'seat' => $this->seat,
         ];
     }
 }

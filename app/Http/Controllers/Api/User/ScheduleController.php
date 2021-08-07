@@ -31,7 +31,7 @@ class ScheduleController extends Controller
     public function index(Request $request)
     {
         $pages = intval($request->size);
-        $schedule = $this->scheRepo->scheduleSearch($request)->with('room', 'movie')->paginate($pages);
+        $schedule = $this->scheRepo->scheduleSearch($request)->with('seat', 'room', 'movie')->paginate($pages);
         return $this->response(200, ['schedule' => new ScheduleCollection($schedule)], __('text.retrieved_successfully'), [], null, true);
     }
 
@@ -68,7 +68,7 @@ class ScheduleController extends Controller
      */
     public function show($id)
     {
-        $schedule = $this->scheRepo->find($id);
+        $schedule = $this->scheRepo->makeModel()->with('seat', 'room', 'movie')->find($id);
 
         if (empty($schedule)) {
             return $this->response(200, [], __('text.is_invalid'), [], null, false);

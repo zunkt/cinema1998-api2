@@ -24,6 +24,11 @@ class AddForeignKeysToSeatTable extends Migration
                 ->on('ticket')
                 ->onUpdate('RESTRICT')
                 ->onDelete('RESTRICT');
+            $table->foreign('schedule_id', 'seat_schedule_idfk_1')
+                ->references('id')
+                ->on('schedule')
+                ->onUpdate('RESTRICT')
+                ->onDelete('RESTRICT');
         });
     }
 
@@ -37,6 +42,7 @@ class AddForeignKeysToSeatTable extends Migration
         Schema::table('seat', function (Blueprint $table) {
             $table->dropForeign('seat_ticket_idfk_1');
             $table->dropForeign('seat_room_idfk_1');
+            $table->dropForeign('seat_schedule_idfk_1');
         });
     }
 }

@@ -18,6 +18,7 @@ class Seat extends Model
         'price',
         'ticket_id',
         'room_id',
+        'schedule_id'
     ];
 
     /**
@@ -32,6 +33,7 @@ class Seat extends Model
         'price' => 'double',
         'ticket_id' => 'integer',
         'room_id' => 'integer',
+        'schedule_id' => 'integer',
     ];
 
     /**
@@ -45,6 +47,7 @@ class Seat extends Model
         'price' => 'required|max:100',
         'ticket_id' => 'required|integer|max:100',
         'room_id' => 'required|integer|max:100',
+        'schedule_id' => 'required|integer|max:100',
     ];
 
     //Relation
@@ -57,10 +60,18 @@ class Seat extends Model
     }
 
     /**
-     * @return BelongsToMany
+     * @return BelongsTo
      */
     public function room()
     {
-        return $this->belongsToMany(\App\Models\Room::class, 'room_id');
+        return $this->belongsTo(\App\Models\Room::class, 'room_id');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function schedule()
+    {
+        return $this->belongsTo(\App\Models\Schedule::class, 'schedule_id');
     }
 }

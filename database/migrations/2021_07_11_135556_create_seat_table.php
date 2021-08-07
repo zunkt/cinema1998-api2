@@ -20,6 +20,7 @@ class CreateSeatTable extends Migration
             $table->double('price');
             $table->integer('ticket_id');
             $table->integer('room_id');
+            $table->integer('schedule_id');
             $table->dateTime('created_at');
             $table->dateTime('updated_at');
         });

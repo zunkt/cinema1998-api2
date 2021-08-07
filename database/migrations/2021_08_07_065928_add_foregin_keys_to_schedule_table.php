@@ -35,7 +35,8 @@ class AddForeginKeysToScheduleTable extends Migration
     public function down()
     {
         Schema::table('schedule', function (Blueprint $table) {
-            //
+            $table->dropForeign('schedule_movie_idfk_1');
+            $table->dropForeign('schedule_room_idfk_1');
         });
     }
 }
