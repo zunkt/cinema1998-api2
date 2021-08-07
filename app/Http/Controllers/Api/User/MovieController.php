@@ -87,7 +87,7 @@ class MovieController extends Controller
 
             //Validate image
             if ($typeFile != 'image') {
-                return $this->response(422, null, __('text.only_upload_file_image'));
+                return $this->response(200, null, __('text.only_upload_file_image'));
             }
 
             //Path save image upload
