@@ -21,7 +21,7 @@ class AddForeignKeysToSeatTable extends Migration
                 ->onDelete('RESTRICT');
             $table->foreign('seat_id', 'seat_seat_room_idfk_1')
                 ->references('id')
-                ->on('seat_roon')
+                ->on('seat_room')
                 ->onUpdate('RESTRICT')
                 ->onDelete('RESTRICT');
             $table->foreign('schedule_id', 'seat_schedule_idfk_1')
