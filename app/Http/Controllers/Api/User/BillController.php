@@ -91,18 +91,18 @@ class BillController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->response(422, [], '', $validator->errors(), [], false);
+            return $this->response(200, [], '', $validator->errors(), [], false);
         }
         $input = $request->only(['price', 'status', 'ticket_id']);
 
         $bill = $this->billRepo->find($id);
 
         if (empty($bill)) {
-            return $this->response(422, [], __('text.not_found', ['model' => 'Bill']), [], false);
+            return $this->response(200, [], __('text.not_found', ['model' => 'Bill']), [], false);
         }
 
         $bill = $this->billRepo->update($input, $id);
-        return $this->response(200, ['bill' => new BillResource($bill)], __('text.register_successfully'), [], true, false);
+        return $this->response(200, ['bill' => new BillResource($bill)], __('text.register_successfully'), [], true, true);
     }
 
     /**
@@ -121,6 +121,6 @@ class BillController extends Controller
 
         $this->billRepo->delete($id);
 
-        return $this->response(200, null,  __('text.delete_successfully'));
+        return $this->response(200, null,  __('text.delete_successfully'), [], true, true);
     }
 }
