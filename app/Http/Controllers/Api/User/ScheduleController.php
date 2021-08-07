@@ -31,7 +31,7 @@ class ScheduleController extends Controller
     public function index(Request $request)
     {
         $pages = intval($request->size);
-        $schedule = $this->scheRepo->scheduleSearch($request)->paginate($pages);
+        $schedule = $this->scheRepo->scheduleSearch($request)->with('room', 'movie')->paginate($pages);
         return $this->response(200, ['schedule' => new ScheduleCollection($schedule)], __('text.retrieved_successfully'), [], null, true);
     }
 
@@ -44,19 +44,20 @@ class ScheduleController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:100',
+            'date_start' => 'required|string|max:100',
             'time_start' => 'nullable',
             'time_end' => 'nullable',
-            'movie_id' => 'required|int'
+            'movie_id' => 'required|int',
+            'room_id' => 'required|int'
         ]);
 
         if ($validator->fails()) {
             return $this->response(200, [], '', $validator->errors(), [], false);
         }
-        $input = $request->only(['name', 'time_start', 'time_end', 'movie_id']);
+        $input = $request->only(['date_start', 'time_start', 'time_end', 'movie_id', 'room_id']);
 
         $schedule =  $this->scheRepo->create($input);
-        return $this->response(200, ['schedule' => new ScheduleResource($this->scheRepo->find($schedule->id))], __('text.register_successfully'), [], false, true);
+        return $this->response(200, ['schedule' => new ScheduleResource($this->scheRepo->makeModel()->with('room', 'movie')->find($schedule->id))], __('text.register_successfully'), [], false, true);
     }
 
     /**
@@ -86,17 +87,18 @@ class ScheduleController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:100',
+            'date_start' => 'required|string|max:100',
             'time_start' => 'nullable',
             'time_end' => 'nullable',
-            'movie_id' => 'required|int'
+            'movie_id' => 'required|int',
+            'room_id' => 'required|int',
         ]);
 
         if ($validator->fails()) {
             return $this->response(200, [], '', $validator->errors(), [], false);
         }
 
-        $input = $request->only(['name', 'time_start', 'time_end', 'movie_id']);
+        $input = $request->only(['date_start', 'time_start', 'time_end', 'movie_id', 'room_id']);
 
         $schedule = $this->scheRepo->find($id);
 

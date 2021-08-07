@@ -18,7 +18,6 @@ class Room extends Model
         'name',
         'room_number',
         'theater_id',
-        'schedule_id',
     ];
 
     /**
@@ -31,7 +30,6 @@ class Room extends Model
         'name' => 'string',
         'room_number' => 'integer',
         'theater_id' => 'integer',
-        'schedule_id' => 'integer',
     ];
 
     /**
@@ -43,7 +41,6 @@ class Room extends Model
         'name' => 'required|string|max:100',
         'room_number' => 'required|integer|max:100',
         'theater_id' => 'required|integer|max:100',
-        'schedule_id' => 'required|integer|max:100',
     ];
 
     /**
@@ -55,11 +52,11 @@ class Room extends Model
     }
 
     /**
-     * @return BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function schedule()
     {
-        return $this->belongsToMany(\App\Models\Schedule::class, 'schedule_id');
+        return $this->hasOne(\App\Models\Schedule::class, 'room_id');
     }
 
     /**

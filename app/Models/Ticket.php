@@ -71,10 +71,18 @@ class Ticket extends Model
     }
 
     /**
-     * @return HasOne
-     **/
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function seat()
     {
-        return $this->hasOne(\App\Models\Seat::class, 'ticket_id');
+        return $this->hasMany(\App\Models\Seat::class, 'ticket_id');
     }
+
+//    /**
+//     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+//     */
+//    public function corn()
+//    {
+//        return $this->hasMany(\App\Models\Seat::class, 'ticket_id');
+//    }
 }

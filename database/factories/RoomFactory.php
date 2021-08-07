@@ -25,7 +25,6 @@ class RoomFactory extends Factory
             'name' => $this->faker->name(),
             'room_number' => $this->faker->unique()->numberBetween(1, 100),
             'theater_id' => $this->faker->numberBetween(1, 10),
-            'schedule_id' => 1,
         ];
     }
 }

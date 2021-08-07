@@ -18,7 +18,6 @@ class CreateRoomTable extends Migration
             $table->string('name');
             $table->string('room_number');
             $table->integer('theater_id');
-            $table->integer('schedule_id');
             $table->dateTime('created_at');
             $table->dateTime('updated_at');
         });

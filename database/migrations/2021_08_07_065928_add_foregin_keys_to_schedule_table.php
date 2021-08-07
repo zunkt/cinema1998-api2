@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddForeignKeysToRoomTable extends Migration
+class AddForeginKeysToScheduleTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,15 @@ class AddForeignKeysToRoomTable extends Migration
      */
     public function up()
     {
-        Schema::table('room', function (Blueprint $table) {
-            $table->foreign('theater_id', 'room_theater_idfk_1')
+        Schema::table('schedule', function (Blueprint $table) {
+            $table->foreign('movie_id', 'schedule_movie_idfk_1')
                 ->references('id')
-                ->on('theater')
+                ->on('movie')
+                ->onUpdate('RESTRICT')
+                ->onDelete('RESTRICT');
+            $table->foreign('room_id', 'schedule_room_idfk_1')
+                ->references('id')
+                ->on('room')
                 ->onUpdate('RESTRICT')
                 ->onDelete('RESTRICT');
         });
@@ -29,9 +34,8 @@ class AddForeignKeysToRoomTable extends Migration
      */
     public function down()
     {
-        Schema::table('room', function (Blueprint $table) {
-            $table->dropForeign('room_theater_idfk_1');
-            $table->dropForeign('room_schedule_idfk_1');
+        Schema::table('schedule', function (Blueprint $table) {
+            //
         });
     }
 }

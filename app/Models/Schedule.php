@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Schedule extends Model
 {
@@ -14,10 +15,11 @@ class Schedule extends Model
     const UPDATED_AT = 'updated_at';
 
     public $fillable = [
-        'name',
+        'date_start',
         'time_start',
         'time_end',
-        'movie_id'
+        'movie_id',
+        'room_id'
     ];
 
     /**
@@ -27,10 +29,11 @@ class Schedule extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'name' => 'string',
+        'date_start' => 'string',
         'time_start' => 'datetime',
         'time_end' => 'datetime',
         'movie_id' => 'integer',
+        'room_id' => 'integer',
     ];
 
     /**
@@ -39,7 +42,7 @@ class Schedule extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required|string|max:100',
+        'date_start' => 'required|string|max:100',
         'created_at' => 'required',
     ];
 
@@ -53,18 +56,18 @@ class Schedule extends Model
     }
 
     /**
-     * @return hasMany
-     **/
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function room()
     {
-        return $this->hasMany(\App\Models\Room::class, 'schedule_id');
+        return $this->belongsTo(\App\Models\Room::class, 'room_id');
     }
 
     /**
-     * @return BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function movie()
     {
-        return $this->belongsToMany(\App\Models\Movie::class, 'movie_id');
+        return $this->belongsTo(\App\Models\Movie::class, 'movie_id');
     }
 }
