@@ -58,7 +58,7 @@ class SeatController extends Controller
 
         $input = $request->only(['value', 'status', 'ticket_id', 'room_id', 'price', 'schedule_id']);
         $seat = $this->seatRepo->create($input);
-        return $this->response(200, ['seat' => new SeatResource($seat = $this->seatRepo->find($seat->id))], __('text.register_successfully'));
+        return $this->response(200, ['seat' => new SeatResource($seat = $this->seatRepo->find($seat->id))], __('text.register_successfully'),[], [], true);
     }
 
     /**
@@ -103,11 +103,11 @@ class SeatController extends Controller
         $input = $request->only(['name', 'seat_number', 'ticket_id', 'room_id', 'status', 'schedule_id']);
 
         if (empty($this->seatRepo->find($id))) {
-            return $this->response(404, [], __('text.not_found', ['model' => 'Seat']), [], false);
+            return $this->response(404, [], __('text.not_found', ['model' => 'Seat']), [], false, false);
         }
 
         $seat = $this->seatRepo->update($input, $id);
-        return $this->response(200, ['theater' => new SeatResource($seat)], __('text.update_successfully'));
+        return $this->response(200, ['theater' => new SeatResource($seat)], __('text.update_successfully'), [], false, true);
     }
 
     /**
@@ -121,11 +121,11 @@ class SeatController extends Controller
         $seat = $this->seatRepo->find($id);
 
         if (empty($seat)) {
-            return $this->response(404, [], __('text.delete_not_found'), [], false);
+            return $this->response(404, [], __('text.delete_not_found'), [], false, true);
         }
 
         $this->seatRepo->delete($id);
 
-        return $this->response(200, null, __('text.delete_successfully', ['model' => 'Seat']), [], true);
+        return $this->response(200, null, __('text.delete_successfully', ['model' => 'Seat']), [], true, true);
     }
 }
