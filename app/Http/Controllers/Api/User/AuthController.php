@@ -177,7 +177,8 @@ class AuthController extends Controller
             $user = User::where(['email' => $request->email])->first();
             $user->update(['failed_login_attempts' => 0]);
         }
-        return response()->json(['message' => __($status)], $code);
+
+        return $this->response(200, [], $status, $validator->errors(), [], true);
     }
 
     /**

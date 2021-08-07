@@ -47,9 +47,9 @@ class Room extends Model
     /**
      * @return hasMany
      **/
-    public function seat()
+    public function seat_room()
     {
-        return $this->hasMany(\App\Models\Seat::class, 'room_id');
+        return $this->hasMany(\App\Models\SeatRoom::class, 'room_id');
     }
 
     /**

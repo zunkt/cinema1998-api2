@@ -108,6 +108,15 @@ Route::group(['middleware' => 'auth:user'], function () {
         Route::post('update/{id}', [SeatController::class, 'update']);
         Route::post('delete/{id}', [SeatController::class, 'destroy']);
     });
+
+    // Resource Seat Room
+    Route::group(['prefix' => 'seatroom'], function () {
+        Route::get('all', [SeatRoomController::class, 'index']);
+        Route::get('show/{id}', [SeatRoomController::class, 'show']);
+        Route::post('store', [SeatRoomController::class, 'store']);
+        Route::post('update/{id}', [SeatRoomController::class, 'update']);
+        Route::post('delete/{id}', [SeatRoomController::class, 'destroy']);
+    });
 });
 
 // Resource Movie
