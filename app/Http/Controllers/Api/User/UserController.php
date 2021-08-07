@@ -35,44 +35,26 @@ class UserController extends Controller
         /** @var User $user */
 
         $validator = Validator::make($request->all(), [
-            'password' => 'required|string|max:100',
             'email' => 'required|email|max:255',
             'name' => 'required|string|max:100',
             'full_name' => 'required|string|max:255',
-            'token' => 'string',
-            'phone' => 'required|string|max:255',
-            'is_phone_verified' => 'nullable|boolean',
-            'is_verified_email' => 'nullable|boolean',
-            'is_token_phone' => 'nullable|boolean',
-            'ban_at' => 'nullable',
-            'id_social' => 'nullable|boolean',
         ]);
 
         if ($validator->fails()) {
             return $this->response(422, [], '', $validator->errors());
         }
 
-        $input = $request->only(['phone', 'email', 'name',
-            'status', 'is_65', 'is_pregnant', 'is_child', 'ticket', 'no_show',
-            'child_age', 'sc_name', 'sc_phone', 'birthday', 'nationality', 'gender']);
-
-        if ($input['phone']) {
-            $isRegistered = $this->userRepo->all(['phone' => $input['phone']]);
-
-            if (count($isRegistered)) {
-                return $this->response(422, [], __('text.phone_number_has_been_registered'), null, self::PHONE_REGISTERED);
-            }
-        }
+        $input = $request->only(['email', 'name', 'full_name']);
 
         $user = auth('user')->user();
 
         if (empty($user)) {
-            return $this->response(422, [], __('text.this_user_is_invalid'));
+            return $this->response(200, [], __('text.this_user_is_invalid'), [], null, false);
         }
 
         $user = $this->userRepo->update($input, $user->id);
 
-        return $this->response(200, ['user' => new UserResource($user)], __('text.update_successfully'));
+        return $this->response(200, ['user' => new UserResource($user)], __('text.update_successfully'), [], null, true);
     }
 
     /**

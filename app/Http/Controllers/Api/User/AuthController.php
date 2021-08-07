@@ -236,7 +236,7 @@ class AuthController extends Controller
 
         } catch (\Throwable $th) {
             DB::rollBack();
-            return $this->response(200, [], $th->getMessage(), [], null, false);
+            return $this->response(200, [], $th->getMessage(), [], null, true);
         }
     }
 }
