@@ -35,7 +35,7 @@ class RoomController extends Controller
     public function index(Request $request)
     {
         $pages = intval($request->size);
-        $room = $this->roomRepo->roomSearch($request)->with('seat')->paginate($pages);
+        $room = $this->roomRepo->roomSearch($request)->with('theater', 'seat', 'schedule')->paginate($pages);
         return $this->response(200, ['room' => new RoomCollection($room)], __('text.retrieved_successfully'), [], null, true);
     }
 
@@ -55,7 +55,7 @@ class RoomController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->response(422, [], '', $validator->errors());
+            return $this->response(200, [], '', $validator->errors(), null, false);
         }
         $input = $request->only(['name', 'room_number', 'theater_id', 'schedule_id']);
 
@@ -77,7 +77,7 @@ class RoomController extends Controller
      */
     public function show($id)
     {
-        $room = $this->roomRepo->find($id);
+        $room = $this->roomRepo->makeModel()->with('theater', 'schedule', 'seat')->find($id);
 
         if (empty($room)) {
             return $this->response(200, [], __('text.not_found', ['model' => 'Room']), [], null, false);
