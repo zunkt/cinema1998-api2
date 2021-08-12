@@ -156,7 +156,6 @@ class AuthController extends Controller
     public function resetPassword(Request $request)
     {
         dump(1);
-        dd(1111);
         $validator = Validator::make(request()->all(), [
             'token' => 'required',
             'email' => 'required|email',
@@ -178,13 +177,14 @@ class AuthController extends Controller
                 dump(5);
             }
         );
-        dd(1111);
+        dump(6);
         $code = $status === Password::PASSWORD_RESET ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST;
         if ($code === Response::HTTP_OK) {
+            dump(7);
             $user = User::where(['email' => $request->email])->first();
             $user->update(['failed_login_attempts' => 0]);
         }
-
+        dd(8);
         return $this->response(200, [], $status, $validator->errors(), [], true);
     }
 
