@@ -13,7 +13,14 @@ class Controller extends BaseController
 
     const PHONE_REGISTERED = 201;
     const VERIFY_FAILURE = 202;
+
     /**
+     * @param int $code
+     * @param array $data
+     * @param string $message
+     * @param array $errors
+     * @param null $extendCode
+     * @param string $status
      * @return \Illuminate\Http\JsonResponse
      */
     public function response($code = 200, $data = [], $message = '', $errors = [], $extendCode = null, $status = '')

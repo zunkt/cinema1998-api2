@@ -155,6 +155,8 @@ class AuthController extends Controller
      */
     public function resetPassword(Request $request)
     {
+        dump(1);
+        dd(1111);
         $validator = Validator::make(request()->all(), [
             'token' => 'required',
             'email' => 'required|email',
@@ -163,15 +165,20 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return $this->response(200, [], '', $validator->errors(), [], false);
         }
+        dump(2);
 
         $status = Password::broker('users')->reset(
             $request->only('email', 'password', 'token'),
             function ($user, $password) use ($request) {
+                dump(3);
                 $user->forceFill(['password' => Hash::make($password)])->save();
+                dump(4);
                 $user->setRememberToken(Str::random(60));
                 event(new PasswordReset($user));
+                dump(5);
             }
         );
+        dd(1111);
         $code = $status === Password::PASSWORD_RESET ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST;
         if ($code === Response::HTTP_OK) {
             $user = User::where(['email' => $request->email])->first();
