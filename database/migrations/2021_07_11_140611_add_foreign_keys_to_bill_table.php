@@ -16,7 +16,7 @@ class AddForeignKeysToBillTable extends Migration
         Schema::table('bill', function (Blueprint $table) {
             $table->foreign('ticket_id', 'bill_ticket_idfk_1')
                 ->references('id')
-                ->on('bill')
+                ->on('ticket')
                 ->onUpdate('RESTRICT')
                 ->onDelete('RESTRICT');
         });
@@ -30,7 +30,7 @@ class AddForeignKeysToBillTable extends Migration
     public function down()
     {
         Schema::table('bill', function (Blueprint $table) {
-            //
+            $table->dropForeign('bill_ticket_idfk_1');
         });
     }
 }

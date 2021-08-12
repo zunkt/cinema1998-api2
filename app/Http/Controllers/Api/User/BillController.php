@@ -31,7 +31,7 @@ class BillController extends Controller
     public function index(Request $request)
     {
         $pages = intval($request->size);
-        $bill = $this->billRepo->billSearch($request)->paginate($pages);
+        $bill = $this->billRepo->billSearch($request)->with('ticket')->paginate($pages);
         return $this->response(200, ['bill' => new BillCollection($bill)], __('text.retrieved_successfully'), [], null, true);
     }
 
@@ -66,13 +66,13 @@ class BillController extends Controller
      */
     public function show($id)
     {
-        $bill = $this->billRepo->find($id);
+        $bill = $this->billRepo->makeModel()->with('ticket')->find($id);
 
         if (empty($bill)) {
             return $this->response(200, [], __('text.is_invalid'), [], null, false);
         }
 
-        return $this->response(200, ['bill' => new BillResource($bill)], __('text.retrieved_successfully'));
+        return $this->response(200, ['bill' => new BillResource($bill)], __('text.retrieved_successfully'), [], null, true);
     }
 
     /**
@@ -98,7 +98,7 @@ class BillController extends Controller
         $bill = $this->billRepo->find($id);
 
         if (empty($bill)) {
-            return $this->response(200, [], __('text.not_found', ['model' => 'Bill']), [], false);
+            return $this->response(200, [], __('text.not_found', ['model' => 'Bill']), [], false, false);
         }
 
         $bill = $this->billRepo->update($input, $id);
@@ -116,7 +116,7 @@ class BillController extends Controller
         $bill = $this->billRepo->find($id);
 
         if (empty($bill)) {
-            return $this->response(200, [], __('text.delete_not_found'), [], false);
+            return $this->response(200, [], __('text.delete_not_found'), [], false, false);
         }
 
         $this->billRepo->delete($id);
