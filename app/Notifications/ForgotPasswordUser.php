@@ -44,7 +44,7 @@ class ForgotPasswordUser extends Notification
      */
     public function toMail($notifiable)
     {
-        $url = sprintf('%s/account/change-password/?token=%s&email=%s', env('USER_URL', 'localhost:8080'), $this->token,
+        $url = sprintf('%s/account/reset-password/?token=%s&email=%s', env('USER_URL', 'localhost:8080'), $this->token,
             $this->email);
 
         return (new MailMessage)
