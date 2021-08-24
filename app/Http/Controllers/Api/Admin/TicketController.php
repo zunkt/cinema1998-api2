@@ -7,7 +7,6 @@ use App\Http\Resources\TicketCollection;
 use App\Http\Resources\TicketResource;
 use App\Repositories\BillRepository;
 use App\Repositories\ScheduleRepository;
-use App\Repositories\TheaterRepository;
 use App\Repositories\TicketRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Http\Request;

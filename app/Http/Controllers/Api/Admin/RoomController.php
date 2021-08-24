@@ -35,7 +35,7 @@ class RoomController extends Controller
     public function index(Request $request)
     {
         $pages = intval($request->size);
-        $room = $this->roomRepo->roomSearch($request)->with('seat')->paginate($pages);
+        $room = $this->roomRepo->roomSearch($request)->with('theater', 'seat_room', 'schedule')->paginate($pages);
         return $this->response(200, ['room' => new RoomCollection($room)], __('text.retrieved_successfully'), [], null, true);
     }
 
@@ -51,13 +51,12 @@ class RoomController extends Controller
             'name' => 'required|string|max:100',
             'room_number' => 'required|integer|max:100',
             'theater_id' => 'required|integer',
-            'schedule_id' => 'required|integer'
         ]);
 
         if ($validator->fails()) {
-            return $this->response(422, [], '', $validator->errors());
+            return $this->response(200, [], '', $validator->errors(), null, false);
         }
-        $input = $request->only(['name', 'room_number', 'theater_id', 'schedule_id']);
+        $input = $request->only(['name', 'room_number', 'theater_id']);
 
         $isExitTheater = $this->theaRepo->find($request->theater_id);
 
@@ -77,13 +76,28 @@ class RoomController extends Controller
      */
     public function show($id)
     {
-        $room = $this->roomRepo->find($id);
+        $room = $this->roomRepo->makeModel()->with('theater', 'schedule', 'seat_room')->find($id);
 
         if (empty($room)) {
             return $this->response(200, [], __('text.not_found', ['model' => 'Room']), [], null, false);
         }
 
         return $this->response(200, ['room' => new RoomResource($room)], __('text.retrieved_successfully'), [], null, true);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function get(Request $request)
+    {
+        $pages = intval($request->size);
+
+        $room = $this->roomRepo->roomSearch($request)->with('seat_room')->paginate($pages);
+
+        return $this->response(200, ['room' => new RoomCollection($room)], __('text.retrieved_successfully'), [], null, true);
     }
 
     /**
@@ -99,22 +113,21 @@ class RoomController extends Controller
             'name' => 'required|string|max:100',
             'room_number' => 'required|integer|max:100',
             'theater_id' => 'required|integer',
-            'schedule_id' => 'required|integer'
         ]);
 
         if ($validator->fails()) {
-            return $this->response(422, [], '', $validator->errors());
+            return $this->response(200, [], '', $validator->errors(), null, false);
         }
 
-        $input = $request->only(['name', 'room_number', 'theater_id', 'schedule_id']);
+        $input = $request->only(['name', 'room_number', 'theater_id']);
 
         if (empty($this->roomRepo->find($id))) {
-            return $this->response(422, [], __('text.not_found', ['model' => 'Room']));
+            return $this->response(200, [], __('text.not_found', ['model' => 'Room']), null, [], false);
         }
 
         $room = $this->roomRepo->update($input, $id);
 
-        return $this->response(200, ['schedule' => new RoomResource($room)], __('text.update_successfully'));
+        return $this->response(200, ['schedule' => new RoomResource($room)], __('text.update_successfully'), null, [], true);
     }
 
     /**
@@ -128,11 +141,11 @@ class RoomController extends Controller
         $room = $this->roomRepo->find($id);
 
         if (empty($room)) {
-            return $this->response(200, [], __('text.delete_not_found'), [], false);
+            return $this->response(200, [], __('text.delete_not_found'), [], false, false);
         }
 
         $this->roomRepo->delete($id);
 
-        return $this->response(200, null, __('text.delete_successfully'));
+        return $this->response(200, null, __('text.delete_successfully'), [], false, true);
     }
 }

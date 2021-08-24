@@ -11,7 +11,7 @@ class CouponController extends Controller
     private $couponRepo;
 
     /**
-     * MediaController constructor
+     * MediaController constructor.
      * @param CouponRepository $couponRepo
      */
     public function __construct(CouponRepository $couponRepo)

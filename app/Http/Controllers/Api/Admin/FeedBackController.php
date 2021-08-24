@@ -52,14 +52,14 @@ class FeedBackController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->response(422, [], '', $validator->errors());
+            return $this->response(200, [], '', $validator->errors(), [], false);
         }
         $input = $request->only(['content', 'movie_id']);
 
         $isExitMovie = $this->movieRepo->find($request->movie_id);
 
         if (!$isExitMovie) {
-            return $this->response(422, [], __('text.not_found', ['model' => 'Movie Id']), [], null, false);
+            return $this->response(200, [], __('text.not_found', ['model' => 'Movie Id']), [], null, false);
         }
 
         $feedback = $this->feedRepo->create($input);
@@ -98,18 +98,18 @@ class FeedBackController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return $this->response(422, [], '', $validator->errors(), [], false);
+            return $this->response(200, [], '', $validator->errors(), [], false);
         }
 
         $input = $request->only(['content', 'movie_id']);
 
         if (empty($this->feedRepo->find($id))) {
-            return $this->response(404, [], __('text.not_found', ['model' => 'FeedBack']), [], false);
+            return $this->response(200, [], __('text.not_found', ['model' => 'FeedBack']), [], null, false);
         }
 
         $isExitMovie = $this->movieRepo->find($request->movie_id);
         if (!$isExitMovie) {
-            return $this->response(404, [], __('text.not_found', ['model' => 'Movie Id']), [], null, false);
+            return $this->response(200, [], __('text.not_found', ['model' => 'Movie Id']), [], null, false);
         }
 
         $feedback = $this->feedRepo->update($input, $id);

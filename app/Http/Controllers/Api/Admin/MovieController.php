@@ -35,7 +35,7 @@ class MovieController extends Controller
     public function index(Request $request)
     {
         $pages = intval($request->size);
-        $movie = $this->movieRepo->movieSearch($request)->paginate($pages);
+        $movie = $this->movieRepo->movieSearch($request)->with('schedule')->paginate($pages);
         return $this->response(200, ['movie' => new MovieCollection($movie)], __('text.retrieved_successfully'), [], null, true);
     }
 
@@ -52,23 +52,29 @@ class MovieController extends Controller
             'image' => 'nullable',
             'trailer_url' => 'nullable|string|max:100',
             'director' => 'nullable|string|max:100',
-            'language' => 'nullable|string|max:100',
+            'language' => 'nullable|max:100',
             'actor' => 'nullable|string|max:100',
             'year' => 'nullable|integer',
             'long_time' => 'nullable|integer|max:100',
             'rating' => 'nullable|integer|max:100',
-            'descriptionContent' => 'nullable|string|max:100',
+            'descriptionContent' => 'nullable',
             'type' => 'nullable|string|max:100',
+            'slot' => 'nullable|integer|max:100',
+            'imageText' => 'nullable|string',
+            'backgroundImage' => 'nullable|string',
+            'releaseDate' => 'nullable|string|max:100',
         ]);
+
 
         if ($validator->fails()) {
             return $this->response(422, [], '', $validator->errors());
         }
-
         $input = $request->only(['name', 'image', 'trailer_url', 'director',
-            'language', 'actor', 'year', 'long_time', 'rating', 'descriptionContent', 'type']);
+            'language', 'releaseDate','backgroundImage','actor', 'year', 'long_time', 'rating', 'descriptionContent', 'type', 'slot', 'imageText']);
 
+        $input['language'] = json_encode($request->language);
         $input['image'] = '';
+        $input['slot'] = 0;
         $movie = $this->movieRepo->create($input);
         //Validate mine type image
         if ($request->image) {
@@ -81,7 +87,7 @@ class MovieController extends Controller
 
             //Validate image
             if ($typeFile != 'image') {
-                return $this->response(422, null, __('text.only_upload_file_image'));
+                return $this->response(200, null, __('text.only_upload_file_image'));
             }
 
             //Path save image upload
@@ -95,8 +101,9 @@ class MovieController extends Controller
             $path = Storage::put($resPathUpload, $file);
             $input['image'] = $path;
         }
-
+        $input['slot'] = $movie->id;
         $movie = $this->movieRepo->update($input, $movie->id);
+
         return $this->response(200, ['movie' => new MovieResource($movie)], __('text.register_successfully'));
     }
 
@@ -108,7 +115,7 @@ class MovieController extends Controller
      */
     public function show($id)
     {
-        $movie = $this->movieRepo->find($id);
+        $movie = $this->movieRepo->makeModel()->with('schedule')->find($id);
 
         if (empty($movie)) {
             return $this->response(200, [], __('text.not_found', ['model' => 'Movie']), [], null, false);
@@ -131,21 +138,31 @@ class MovieController extends Controller
             'image' => 'nullable',
             'trailer_url' => 'nullable|string|max:100',
             'director' => 'nullable|string|max:100',
-            'language' => 'nullable|string|max:100',
+            'language' => 'nullable|max:100',
             'actor' => 'nullable|string|max:100',
             'year' => 'nullable|integer',
             'long_time' => 'nullable|integer|max:100',
             'rating' => 'nullable|integer|max:100',
-            'descriptionContent' => 'nullable|string|max:100',
+            'descriptionContent' => 'nullable',
             'type' => 'nullable|string|max:100',
             'slot' => 'nullable|integer|max:100',
+            'imageText' => 'nullable|string',
+            'backgroundImage' => 'nullable|string|max:100',
+            'releaseDate' => 'nullable|string|max:100',
         ]);
 
         if ($validator->fails()) {
             return $this->response(422, [], '', $validator->errors());
         }
+
         $input = $request->only(['name', 'image', 'trailer_url', 'director',
-            'language', 'actor', 'year', 'long_time', 'rating', 'descriptionContent', 'type', 'slot']);
+            'language', 'releaseDate','backgroundImage','actor', 'year', 'long_time', 'rating', 'descriptionContent', 'type', 'slot', 'imageText']);
+
+        $input = $request->only(['name', 'image', 'trailer_url', 'director',
+            'language', 'releaseDate','backgroundImage','actor', 'year', 'long_time', 'rating', 'descriptionContent', 'type', 'slot', 'imageText']);
+
+        $input['language'] = json_encode($request->language);
+        $input['image'] = '';
 
         $movie = $this->movieRepo->find($id);
 
